@@ -1,9 +1,9 @@
 package com.feature.flags.model;
 
 import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -13,31 +13,29 @@ import javax.persistence.Table;
 @Table
 public class FeatureFlagStatus {
 
-    @ManyToOne(fetch=FetchType.LAZY)
-    @JoinColumn(name="feature_flag.name")
+    @Id
+    String id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "feature_flag.name")
     FeatureFlag flag;
     Boolean value;
-    Long userId;
-    Integer orgId;
-    String role;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.SEQUENCE)
-    Long id;
+    @Enumerated(EnumType.STRING)
+    FeatureFlagLevel level;
+    String levelValue;
 
     public FeatureFlagStatus() {
     }
 
     public FeatureFlagStatus(FeatureFlag flag,
                              Boolean value,
-                             Long userId,
-                             Integer orgId,
-                             String role) {
+                             FeatureFlagLevel level,
+                             String levelValue) {
+        this.id = String.join(":", flag.getName(), level.name(), levelValue);
         this.flag = flag;
         this.value = value;
-        this.userId = userId;
-        this.orgId = orgId;
-        this.role = role;
+        this.level = level;
+        this.levelValue = levelValue;
     }
 
     public FeatureFlag getFlag() {
@@ -48,23 +46,11 @@ public class FeatureFlagStatus {
         return value;
     }
 
-    public Long getUserId() {
-        return userId;
+    public FeatureFlagLevel getLevel() {
+        return level;
     }
 
-    public Integer getOrgId() {
-        return orgId;
-    }
-
-    public String getRole() {
-        return role;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public Long getId() {
-        return id;
+    public String getLevelValue() {
+        return levelValue;
     }
 }

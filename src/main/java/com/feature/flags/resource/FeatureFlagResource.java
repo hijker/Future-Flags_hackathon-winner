@@ -1,6 +1,7 @@
 package com.feature.flags.resource;
 
 import com.feature.flags.model.FeatureFlag;
+import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.service.FeatureFlagService;
 import com.feature.flags.service.FeatureFlagStatusService;
@@ -44,7 +45,7 @@ public class FeatureFlagResource {
         final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, maxGranularity, training,
                 type, needsConfirmation, deprecationFlow, reasonForIntroduction, new Date(), new Date(), createdById);
         featureFlagService.insertFeatureFlag(featureFlag);
-        FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, null, null, null);
+        FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, FeatureFlagLevel.SYSTEM, "SYSTEM");
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }

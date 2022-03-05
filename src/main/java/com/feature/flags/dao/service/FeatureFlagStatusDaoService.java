@@ -1,6 +1,7 @@
 package com.feature.flags.dao.service;
 
 import com.feature.flags.dao.repository.FeatureFlagStatusRepository;
+import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,10 @@ public class FeatureFlagStatusDaoService {
     }
 
     public List<FeatureFlagStatusResponse> getAllFeatureFlagStatus() {
-        return this.featureFlagStatusRepository.getFeatureFlagStatusResponse();
+        return this.featureFlagStatusRepository.getAllFeatureFlagStatusResponse();
+    }
+
+    public List<FeatureFlagStatusResponse> getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
+        return this.featureFlagStatusRepository.getFeatureFlagStatusByLevelAndLevelValue(level.name(), levelValue);
     }
 }
