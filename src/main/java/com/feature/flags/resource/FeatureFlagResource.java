@@ -44,7 +44,6 @@ public class FeatureFlagResource {
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FeatureFlag> getFeatureFlag(String name) {
-        System.out.println(featureFlagService.getFeatureFlag(name));
         return ResponseEntity.ok(featureFlagService.getFeatureFlag(name));
     }
 
