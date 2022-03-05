@@ -2,8 +2,10 @@ package com.feature.flags.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
+import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table
@@ -23,6 +25,8 @@ public class FeatureFlag {
     private Date createdAt;
     private Date updatedAt;
     private Long createdById;
+    @OneToMany(mappedBy = "flag")
+    private List<FeatureFlagStatus> statuses;
 
     //To be moved to new table
 //    List<String> parentFlags; //Pre-requisite ff- give a warning, one level | no option to enable block going further(disable the toggle)
