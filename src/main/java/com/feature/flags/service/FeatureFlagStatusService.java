@@ -1,7 +1,6 @@
 package com.feature.flags.service;
 
 import com.feature.flags.dao.service.FeatureFlagStatusDaoService;
-import com.feature.flags.model.FeatureFlag;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
@@ -26,5 +25,9 @@ public class FeatureFlagStatusService {
 
     public List<FeatureFlagStatusResponse> getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
         return this.featureFlagStatusDaoService.getFeatureFlagStatusByLevelAndLevelValue(level, levelValue);
+    }
+
+    public FeatureFlagStatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
+        return this.featureFlagStatusDaoService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
     }
 }

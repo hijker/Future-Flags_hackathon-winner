@@ -8,6 +8,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import java.util.Date;
 
 @Entity
 @Table
@@ -23,6 +24,8 @@ public class FeatureFlagStatus {
     @Enumerated(EnumType.STRING)
     FeatureFlagLevel level;
     String levelValue;
+    String updatedBy;
+    Date updatedAt;
 
     public FeatureFlagStatus() {
     }
@@ -30,12 +33,16 @@ public class FeatureFlagStatus {
     public FeatureFlagStatus(FeatureFlag flag,
                              Boolean value,
                              FeatureFlagLevel level,
-                             String levelValue) {
+                             String levelValue,
+                             String updatedBy,
+                             Date updatedAt) {
         this.id = String.join(":", flag.getName(), level.name(), levelValue);
         this.flag = flag;
         this.value = value;
         this.level = level;
         this.levelValue = levelValue;
+        this.updatedBy = updatedBy;
+        this.updatedAt = updatedAt;
     }
 
     public FeatureFlag getFlag() {
@@ -52,5 +59,13 @@ public class FeatureFlagStatus {
 
     public String getLevelValue() {
         return levelValue;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
+    }
+
+    public Date getUpdatedAt() {
+        return updatedAt;
     }
 }

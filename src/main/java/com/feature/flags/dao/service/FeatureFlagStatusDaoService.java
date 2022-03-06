@@ -31,4 +31,8 @@ public class FeatureFlagStatusDaoService {
     public List<FeatureFlagStatusResponse> getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
         return this.featureFlagStatusRepository.getFeatureFlagStatusByLevelAndLevelValue(level.name(), levelValue);
     }
+
+    public FeatureFlagStatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
+        return this.featureFlagStatusRepository.getFeatureFlagStatusByNameAndLevelAndLevelValue(name, level.name(), levelValue);
+    }
 }

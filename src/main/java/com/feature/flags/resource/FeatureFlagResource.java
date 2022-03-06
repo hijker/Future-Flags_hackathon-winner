@@ -37,7 +37,7 @@ public class FeatureFlagResource {
                                                     Boolean needsConfirmation,
                                                     String deprecationFlow,
                                                     String reasonForIntroduction,
-                                                    Long createdById) {
+                                                    String createdById) {
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing != null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name already exist\" }");
@@ -45,7 +45,8 @@ public class FeatureFlagResource {
         final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, maxGranularity, training,
                 type, needsConfirmation, deprecationFlow, reasonForIntroduction, new Date(), new Date(), createdById);
         featureFlagService.insertFeatureFlag(featureFlag);
-        FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, FeatureFlagLevel.SYSTEM, "SYSTEM");
+        FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, FeatureFlagLevel.SYSTEM,
+                "SYSTEM", createdById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }

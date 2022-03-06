@@ -2,31 +2,27 @@ package com.feature.flags.model;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.OneToMany;
 import javax.persistence.Table;
 import java.util.Date;
-import java.util.List;
 
 @Entity
 @Table
 public class FeatureFlag {
 
     @Id
-    private String name; //Name of the flag
-    private String summary; //Summary- 1 liner
-    private String description; //Description
-    private String ownerModule; //Owner modules-
-    private String maxGranularity; //Applicable on level from
-    private String training; //link to enablement training
-    private String type; //What kind of ff is this? Partial roll out due to monetization of a feature | Slow roll out for the risk/impact it can cause/meant for smaller audience
-    private Boolean needsConfirmation; //isHighImpact: needs confirmation eg: useActivity(like system level might need approval)
-    private String deprecationFlow; //Deprecation flow: system level or post code change
-    private String reasonForIntroduction; //Reason for creating ff
+    private String name;                    //Name of the flag
+    private String summary;                 //Summary- 1 liner
+    private String description;             //Description
+    private String ownerModule;             //Owner modules-
+    private String maxGranularity;          //Applicable on level from
+    private String training;                //link to enablement training
+    private String type;                    //What kind of ff is this? Partial roll out due to monetization of a feature | Slow roll out for the risk/impact it can cause/meant for smaller audience
+    private Boolean needsConfirmation;      //isHighImpact: needs confirmation eg: useActivity(like system level might need approval)
+    private String deprecationFlow;         //Deprecation flow: system level or post code change
+    private String reasonForIntroduction;   //Reason for creating ff
     private Date createdAt;
     private Date updatedAt;
-    private Long createdById;
-    @OneToMany(mappedBy = "flag")
-    private List<FeatureFlagStatus> statuses;
+    private String createdById;
 
     //To be moved to new table
 //    List<String> parentFlags; //Pre-requisite ff- give a warning, one level | no option to enable block going further(disable the toggle)
@@ -56,7 +52,7 @@ public class FeatureFlag {
                        String reasonForIntroduction,
                        Date createdAt,
                        Date updatedAt,
-                       Long createdById) {
+                       String createdById) {
         this.name = name;
         this.summary = summary;
         this.description = description;
@@ -120,7 +116,7 @@ public class FeatureFlag {
         return updatedAt;
     }
 
-    public Long getCreatedById() {
+    public String getCreatedById() {
         return createdById;
     }
 
