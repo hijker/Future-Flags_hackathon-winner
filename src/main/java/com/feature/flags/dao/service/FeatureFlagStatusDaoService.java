@@ -28,8 +28,8 @@ public class FeatureFlagStatusDaoService {
         return this.featureFlagStatusRepository.getAllFeatureFlagStatusResponse();
     }
 
-    public List<FeatureFlagStatusResponse> getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
-        return this.featureFlagStatusRepository.getFeatureFlagStatusByLevelAndLevelValue(level.name(), levelValue);
+    public List<FeatureFlagStatusResponse> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
+        return this.featureFlagStatusRepository.getAllFeatureFlagStatusByLevelAndLevelValue(level.name(), levelValue);
     }
 
     public FeatureFlagStatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {

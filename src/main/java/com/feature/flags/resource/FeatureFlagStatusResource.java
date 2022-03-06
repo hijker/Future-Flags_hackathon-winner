@@ -59,7 +59,7 @@ public class FeatureFlagStatusResource {
 
     @GetMapping(value = "/get_all_global", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FeatureFlagStatusResponse>> getAllGlobalFeatureFlags() {
-        return ResponseEntity.ok(featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM"));
+        return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM"));
     }
 
     @GetMapping(value = "/get_all_specific", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -68,7 +68,7 @@ public class FeatureFlagStatusResource {
         if(level == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValue(level, levelValue));
+        return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue));
     }
 
     @GetMapping(value = "/get_all_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -85,7 +85,7 @@ public class FeatureFlagStatusResource {
             if (l.ordinal() >= level.ordinal()) {
                 response.put(l, new ArrayList<>());
                 for (FeatureFlagStatusResponse r : featureFlagStatusService
-                        .getFeatureFlagStatusByLevelAndLevelValue(l, getLevelValueForLevelFromLevel(level, levelValue, l))) {
+                        .getAllFeatureFlagStatusByLevelAndLevelValue(l, getLevelValueForLevelFromLevel(level, levelValue, l))) {
                     if (!setFlags.contains(r.getName())) {
                         response.get(l).add(r);
                         setFlags.add(r.getName());

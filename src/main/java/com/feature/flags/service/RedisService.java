@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
+import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
 @Service
@@ -23,7 +24,10 @@ public class RedisService {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public void deleteKeyFormRedis(String key) {
-        redisTemplate.delete(key);
+    public void deleteAllKeyFormRedis() {
+        final Set<String> keys = redisTemplate.keys("*");
+        if (keys != null) {
+            redisTemplate.delete(keys);
+        }
     }
 }

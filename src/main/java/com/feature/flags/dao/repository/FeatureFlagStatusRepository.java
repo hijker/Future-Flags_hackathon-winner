@@ -18,7 +18,7 @@ public interface FeatureFlagStatusRepository extends JpaRepository<FeatureFlagSt
             "from feature_flag inner join feature_flag_status " +
             "on feature_flag.name = feature_flag_status.feature_flag_name " +
             "where feature_flag_status.level = :level and feature_flag_status.level_value = :levelValue", nativeQuery = true)
-    List<FeatureFlagStatusResponse> getFeatureFlagStatusByLevelAndLevelValue(String level, String levelValue);
+    List<FeatureFlagStatusResponse> getAllFeatureFlagStatusByLevelAndLevelValue(String level, String levelValue);
 
     @Query(value = "select feature_flag.name, value, summary " +
             "from feature_flag inner join feature_flag_status " +
