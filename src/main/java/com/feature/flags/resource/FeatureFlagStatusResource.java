@@ -57,7 +57,7 @@ public class FeatureFlagStatusResource {
         return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatuses());
     }
 
-    @GetMapping(value = "/get__all_global", produces = MediaType.APPLICATION_JSON_VALUE)
+    @GetMapping(value = "/get_all_global", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FeatureFlagStatusResponse>> getAllGlobalFeatureFlags() {
         return ResponseEntity.ok(featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM"));
     }

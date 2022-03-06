@@ -18,6 +18,8 @@ services:
   redis:
     image: redis
     container_name: redis
+    volumes:
+      - ./redis-data:/bitnami/redis/data
     expose:
       - 6379
 
