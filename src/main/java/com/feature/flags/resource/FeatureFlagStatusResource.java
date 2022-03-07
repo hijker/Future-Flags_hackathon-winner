@@ -4,8 +4,10 @@ import com.feature.flags.model.FeatureFlag;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
+import com.feature.flags.model.User;
 import com.feature.flags.service.FeatureFlagService;
 import com.feature.flags.service.FeatureFlagStatusService;
+import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -34,13 +36,16 @@ public class FeatureFlagStatusResource {
     @Autowired
     FeatureFlagStatusService featureFlagStatusService;
 
+    @Autowired
+    UserService userService;
+
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateFeatureFlagStatus(String name,
                                                           Boolean value,
                                                           FeatureFlagLevel level,
                                                           String levelValue,
                                                           String updatedById) {
-        if(level == null) {
+        if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
@@ -65,7 +70,7 @@ public class FeatureFlagStatusResource {
     @GetMapping(value = "/get_all_specific", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<FeatureFlagStatusResponse>> getAllSpecificFeatureFlags(FeatureFlagLevel level,
                                                                                       String levelValue) {
-        if(level == null) {
+        if (level == null) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue));
@@ -74,7 +79,7 @@ public class FeatureFlagStatusResource {
     @GetMapping(value = "/get_all_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<FeatureFlagLevel, List<FeatureFlagStatusResponse>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
                                                                                                              String levelValue) {
-        if(level == null) {
+        if (level == null) {
             return ResponseEntity.badRequest().build();
         }
         Map<FeatureFlagLevel, List<FeatureFlagStatusResponse>> response = new HashMap<>();
@@ -100,10 +105,10 @@ public class FeatureFlagStatusResource {
     public ResponseEntity<Boolean> getSpecificFeatureFlags(String name,
                                                            FeatureFlagLevel level,
                                                            String levelValue) {
-        if(level == null) {
+        if (level == null) {
             return ResponseEntity.badRequest().build();
         }
-        if(name == null) {
+        if (name == null) {
             return ResponseEntity.badRequest().build();
         }
         final FeatureFlagStatusResponse status = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
@@ -115,10 +120,10 @@ public class FeatureFlagStatusResource {
     public ResponseEntity<Boolean> getFallbackFeatureFlags(String name,
                                                            FeatureFlagLevel level,
                                                            String levelValue) {
-        if(level == null) {
+        if (level == null) {
             return ResponseEntity.badRequest().build();
         }
-        if(name == null) {
+        if (name == null) {
             return ResponseEntity.badRequest().build();
         }
         final FeatureFlagLevel[] values = FeatureFlagLevel.values();
@@ -142,6 +147,23 @@ public class FeatureFlagStatusResource {
         }
         if (sourceLevel == destinationLevel) {
             return levelValue;
+        }
+        User user;
+        switch (sourceLevel) {
+            case USER:
+                user = userService.getById(levelValue);
+                break;
+            case ROLE:
+                user = userService.getByRole(levelValue);
+                break;
+            default:
+                return "SYSTEM";
+        }
+        switch (destinationLevel) {
+            case ROLE:
+                return user.getRole();
+            case ORG:
+                return user.getOrg();
         }
         return "SYSTEM";
     }
