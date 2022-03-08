@@ -1,7 +1,7 @@
 package com.feature.flags.service;
 
 import com.feature.flags.dao.service.UserDaoService;
-import com.feature.flags.model.User;
+import com.feature.flags.model.Users;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -13,23 +13,23 @@ public class UserService {
     @Autowired
     UserDaoService userDaoService;
 
-    public void insertUser(User user) {
-        userDaoService.insertUser(user);
+    public void insertUser(Users users) {
+        userDaoService.insertUser(users);
     }
 
-    public List<User> getAll() {
+    public List<Users> getAll() {
         return userDaoService.getByAll();
     }
 
-    public User getById(String id) {
+    public Users getById(String id) {
         return userDaoService.getById(id);
     }
 
-    public User getByRole(String role) {
+    public Users getByRole(String role) {
         return userDaoService.getByRole(role);
     }
 
-    public User getByOrg(String org) {
+    public Users getByOrg(String org) {
         return userDaoService.getByOrg(org);
     }
 }

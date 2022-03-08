@@ -4,7 +4,7 @@ import com.feature.flags.model.FeatureFlag;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
-import com.feature.flags.model.User;
+import com.feature.flags.model.Users;
 import com.feature.flags.service.FeatureFlagService;
 import com.feature.flags.service.FeatureFlagStatusService;
 import com.feature.flags.service.UserService;
@@ -154,22 +154,22 @@ public class FeatureFlagStatusResource {
         if (sourceLevel == destinationLevel) {
             return levelValue;
         }
-        User user;
+        Users users;
         switch (sourceLevel) {
             case USER:
-                user = userService.getById(levelValue);
+                users = userService.getById(levelValue);
                 break;
             case ROLE:
-                user = userService.getByRole(levelValue);
+                users = userService.getByRole(levelValue);
                 break;
             default:
                 return "SYSTEM";
         }
         switch (destinationLevel) {
             case ROLE:
-                return user.getRole();
+                return users.getRole();
             case ORG:
-                return user.getOrg();
+                return users.getOrg();
         }
         return "SYSTEM";
     }

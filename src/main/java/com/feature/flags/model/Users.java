@@ -6,7 +6,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table
-public class User {
+public class Users {
 
     @Id
     String id;
@@ -15,14 +15,14 @@ public class User {
     String org;
     String domain;
 
-    public User() {
+    public Users() {
     }
 
-    public User(String id,
-                String email,
-                String role,
-                String org,
-                String domain) {
+    public Users(String id,
+                 String email,
+                 String role,
+                 String org,
+                 String domain) {
         this.id = id;
         this.role = role;
         this.org = org;
