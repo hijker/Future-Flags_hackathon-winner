@@ -25,6 +25,7 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/ffs")
@@ -58,41 +59,46 @@ public class FeatureFlagStatusResource {
     }
 
     @GetMapping(value = "/get_all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FeatureFlagStatusResponse>> getAllFeatureFlags() {
-        return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatuses());
+    public ResponseEntity<Map<String, List<FeatureFlagStatusResponse>>> getAllFeatureFlags() {
+        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService.getAllFeatureFlagStatuses()));
     }
 
     @GetMapping(value = "/get_all_global", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FeatureFlagStatusResponse>> getAllGlobalFeatureFlags() {
-        return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM"));
+    public ResponseEntity<Map<String, List<FeatureFlagStatusResponse>>> getAllGlobalFeatureFlags() {
+        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService
+                .getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM")));
     }
 
     @GetMapping(value = "/get_all_specific", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<FeatureFlagStatusResponse>> getAllSpecificFeatureFlags(FeatureFlagLevel level,
-                                                                                      String levelValue) {
+    public ResponseEntity<Map<String, List<FeatureFlagStatusResponse>>> getAllSpecificFeatureFlags(FeatureFlagLevel level,
+                                                                                                   String levelValue) {
         if (level == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(featureFlagStatusService.getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue));
+        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService
+                .getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue)));
     }
 
     @GetMapping(value = "/get_all_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<FeatureFlagLevel, List<FeatureFlagStatusResponse>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
-                                                                                                             String levelValue) {
+    public ResponseEntity<Map<String, List<FeatureFlagStatusResponse>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
+                                                                                                   String levelValue) {
         if (level == null) {
             return ResponseEntity.badRequest().build();
         }
-        Map<FeatureFlagLevel, List<FeatureFlagStatusResponse>> response = new HashMap<>();
+        Map<String, List<FeatureFlagStatusResponse>> response = new HashMap<>();
         Set<String> setFlags = new HashSet<>();
+
         final FeatureFlagLevel[] values = FeatureFlagLevel.values();
         Arrays.sort(values, Comparator.comparingInt(Enum::ordinal));
+
         for (FeatureFlagLevel l : values) {
             if (l.ordinal() >= level.ordinal()) {
-                response.put(l, new ArrayList<>());
                 for (FeatureFlagStatusResponse r : featureFlagStatusService
                         .getAllFeatureFlagStatusByLevelAndLevelValue(l, getLevelValueForLevelFromLevel(level, levelValue, l))) {
                     if (!setFlags.contains(r.getName())) {
-                        response.get(l).add(r);
+                        final List<FeatureFlagStatusResponse> existing = response.getOrDefault(r.getOwnerModule(), new ArrayList<>());
+                        existing.add(r);
+                        response.put(r.getOwnerModule(), existing);
                         setFlags.add(r.getName());
                     }
                 }
@@ -166,5 +172,10 @@ public class FeatureFlagStatusResource {
                 return user.getOrg();
         }
         return "SYSTEM";
+    }
+
+    Map<String, List<FeatureFlagStatusResponse>> getGroupedResponse(List<FeatureFlagStatusResponse> response) {
+        return response.stream()
+                .collect(Collectors.groupingBy(FeatureFlagStatusResponse::getOwnerModule));
     }
 }

@@ -21,9 +21,11 @@ public class UserResource {
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createUser(String id,
+                                             String email,
                                              String role,
-                                             String org) {
-        User user = new User(id, role, org);
+                                             String org,
+                                             String domain) {
+        User user = new User(id, email, role, org, domain);
         userService.insertUser(user);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
@@ -32,4 +34,15 @@ public class UserResource {
     public ResponseEntity<List<User>> getAllUsers() {
         return ResponseEntity.ok(userService.getAll());
     }
+
+    @GetMapping(value = "/suggestions", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<User>> getSuggestions(String prefix) {
+        if (Character.isDigit(prefix.charAt(0))) {
+            //userId or orgId
+        } else {
+            //email or domain
+        }
+        return ResponseEntity.ok(userService.getAll());
+    }
+
 }

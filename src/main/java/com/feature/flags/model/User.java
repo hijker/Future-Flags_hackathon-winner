@@ -10,15 +10,19 @@ public class User {
 
     @Id
     String id;
+    String email;
     String role;
     String org;
+    String domain;
 
     public User() {
     }
 
     public User(String id,
+                String email,
                 String role,
-                String org) {
+                String org,
+                String domain) {
         this.id = id;
         this.role = role;
         this.org = org;
@@ -34,5 +38,13 @@ public class User {
 
     public String getOrg() {
         return org;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public String getDomain() {
+        return domain;
     }
 }
