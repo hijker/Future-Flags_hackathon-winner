@@ -1,21 +1,27 @@
 package com.feature.flags.configuration;
 
+import org.elasticsearch.client.RestHighLevelClient;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.ComponentScan;
+import org.springframework.data.elasticsearch.client.ClientConfiguration;
+import org.springframework.data.elasticsearch.client.RestClients;
+import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
+import org.springframework.data.elasticsearch.core.ElasticsearchRestTemplate;
+import org.springframework.data.elasticsearch.repository.config.EnableElasticsearchRepositories;
 import org.springframework.data.redis.connection.RedisStandaloneConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisClientConfiguration;
 import org.springframework.data.redis.connection.jedis.JedisConnectionFactory;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.data.redis.serializer.GenericJackson2JsonRedisSerializer;
-import org.springframework.data.redis.serializer.GenericToStringSerializer;
-import org.springframework.data.redis.serializer.JdkSerializationRedisSerializer;
 import org.springframework.data.redis.serializer.StringRedisSerializer;
 
-@Configuration
+@org.springframework.context.annotation.Configuration
 @EnableCaching
-public class RedisConfiguration {
+@EnableElasticsearchRepositories(basePackages = "com.feature.flags.dao.repository")
+@ComponentScan(basePackages = {"com.feature.flags.service"})
+public class Configuration {
     @Value("${spring.redis.host}")
     private String REDIS_HOSTNAME;
 
@@ -44,5 +50,20 @@ public class RedisConfiguration {
         factory.afterPropertiesSet();
         redisTemplate.setConnectionFactory(factory);
         return redisTemplate;
+    }
+
+    @Bean
+    public RestHighLevelClient client() {
+        ClientConfiguration clientConfiguration
+                = ClientConfiguration.builder()
+                .connectedTo("localhost:9200")
+                .build();
+
+        return RestClients.create(clientConfiguration).rest();
+    }
+
+    @Bean
+    public ElasticsearchOperations elasticsearchTemplate() {
+        return new ElasticsearchRestTemplate(client());
     }
 }
