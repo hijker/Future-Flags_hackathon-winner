@@ -29,6 +29,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-cache'
 	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 	implementation 'redis.clients:jedis'
+
+	//elastic search
+	implementation 'org.springframework.data:spring-data-elasticsearch'
 }
 
 //tasks.named('test') {

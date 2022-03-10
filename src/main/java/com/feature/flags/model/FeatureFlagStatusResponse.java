@@ -7,7 +7,7 @@ public interface FeatureFlagStatusResponse {
     String getName();
     Boolean getValue();
     String getSummary();
-    Date  getLastUpdated();
-    String getOwnerModule();
+    Date getUpdated_At();
+    String getOwner_module();
     FeatureFlagLevel getLevel();
 }

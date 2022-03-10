@@ -22,6 +22,15 @@ services:
       - ./redis-data:/bitnami/redis/data
     expose:
       - 6379
+    ports:
+      - 6379:6379
+
+  elasticsearch:
+    image: docker.elastic.co/elasticsearch/elasticsearch:7.11.0
+    environment:
+      - "discovery.type=single-node"
+    ports:
+      - 9200:9200
 
   flagsbackend:
     image: flagsbackend
@@ -29,5 +38,6 @@ services:
     depends_on:
       - postgres
       - redis
+      - elasticsearch
     ports:
       - 8080:8080

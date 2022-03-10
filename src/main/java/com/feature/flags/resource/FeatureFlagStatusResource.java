@@ -96,9 +96,9 @@ public class FeatureFlagStatusResource {
                 for (FeatureFlagStatusResponse r : featureFlagStatusService
                         .getAllFeatureFlagStatusByLevelAndLevelValue(l, getLevelValueForLevelFromLevel(level, levelValue, l))) {
                     if (!setFlags.contains(r.getName())) {
-                        final List<FeatureFlagStatusResponse> existing = response.getOrDefault(r.getOwnerModule(), new ArrayList<>());
+                        final List<FeatureFlagStatusResponse> existing = response.getOrDefault(r.getOwner_module(), new ArrayList<>());
                         existing.add(r);
-                        response.put(r.getOwnerModule(), existing);
+                        response.put(r.getOwner_module(), existing);
                         setFlags.add(r.getName());
                     }
                 }
@@ -176,6 +176,6 @@ public class FeatureFlagStatusResource {
 
     Map<String, List<FeatureFlagStatusResponse>> getGroupedResponse(List<FeatureFlagStatusResponse> response) {
         return response.stream()
-                .collect(Collectors.groupingBy(FeatureFlagStatusResponse::getOwnerModule));
+                .collect(Collectors.groupingBy(FeatureFlagStatusResponse::getOwner_module));
     }
 }
