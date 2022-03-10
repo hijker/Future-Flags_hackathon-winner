@@ -4,6 +4,7 @@ import com.feature.flags.dao.service.FeatureFlagStatusDaoService;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
+import com.feature.flags.model.StatusResponsePOJO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -23,8 +24,8 @@ public class FeatureFlagStatusService {
         featureFlagStatusDaoService.insertFeatureFlagStatus(status);
     }
 
-    public List<FeatureFlagStatusResponse> getAllFeatureFlagStatuses() {
-        List<FeatureFlagStatusResponse> allFeatureFlagStatuses = (List<FeatureFlagStatusResponse>) redisService
+    public List<StatusResponsePOJO> getAllFeatureFlagStatuses() {
+        List<StatusResponsePOJO> allFeatureFlagStatuses = (List<StatusResponsePOJO>) redisService
                 .getValue("AllFeatureFlagStatuses");
         if (allFeatureFlagStatuses != null) {
             System.out.println("Got value from redis for key : " + "AllFeatureFlagStatuses");
@@ -35,8 +36,8 @@ public class FeatureFlagStatusService {
         return allFeatureFlagStatuses;
     }
 
-    public List<FeatureFlagStatusResponse> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
-        List<FeatureFlagStatusResponse> allFeatureFlagStatusByLevelAndLevelValue = (List<FeatureFlagStatusResponse>) redisService
+    public List<StatusResponsePOJO> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
+        List<StatusResponsePOJO> allFeatureFlagStatusByLevelAndLevelValue = (List<StatusResponsePOJO>) redisService
                 .getValue(level.name() + ":" + levelValue);
         if (allFeatureFlagStatusByLevelAndLevelValue != null) {
             System.out.println("Got value from redis for key : " + level.name() + ":" + levelValue);
@@ -47,8 +48,8 @@ public class FeatureFlagStatusService {
         return allFeatureFlagStatusByLevelAndLevelValue;
     }
 
-    public FeatureFlagStatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
-        FeatureFlagStatusResponse featureFlagStatusByLevelAndLevelValueAndName = (FeatureFlagStatusResponse) redisService
+    public StatusResponsePOJO getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
+        StatusResponsePOJO featureFlagStatusByLevelAndLevelValueAndName = (StatusResponsePOJO) redisService
                 .getValue(name + ":" + level.name() + ":" + levelValue);
         System.out.println("Got value from redis for key : " + name + ":" + level.name() + ":" + levelValue);
         if (featureFlagStatusByLevelAndLevelValueAndName != null) {
