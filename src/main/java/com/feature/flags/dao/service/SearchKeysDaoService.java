@@ -26,7 +26,7 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getByPrefix(String key) {
-        return repository.findByKeyStartingWith(key, PageRequest.of(0, 1000));
+        return repository.findByKeyStartingWith(key, PageRequest.of(0, 10));
     }
 
     public Iterable<SearchKeywords> getAll() {

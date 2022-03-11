@@ -39,10 +39,10 @@ public class UserResource {
         userService.insertUser(users);
         searchService.insertSearchKeyword(new SearchKeywords(id, USER.name()));
         searchService.insertSearchKeyword(new SearchKeywords(email, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(org, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(domain, USER.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, ROLE.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, ROLE.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name()));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

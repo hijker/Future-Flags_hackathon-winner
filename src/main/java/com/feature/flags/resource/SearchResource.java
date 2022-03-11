@@ -12,6 +12,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/search")
@@ -41,7 +43,9 @@ public class SearchResource {
     }
 
     @GetMapping(value = "/prefix", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<SearchKeywords>> getPrefixSuggestions(String key) {
-        return ResponseEntity.ok(searchService.getByPrefix(key).toList());
+    public ResponseEntity<Map<String, List<SearchKeywords>>> getPrefixSuggestions(String key) {
+        final Map<String, List<SearchKeywords>> collect = searchService
+                .getByPrefix(key).stream().collect(Collectors.groupingBy(SearchKeywords::getType));
+        return ResponseEntity.ok(collect);
     }
 }

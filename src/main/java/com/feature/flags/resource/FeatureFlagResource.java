@@ -3,13 +3,17 @@ package com.feature.flags.resource;
 import com.feature.flags.model.FeatureFlag;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
+import com.feature.flags.model.Features;
 import com.feature.flags.model.ImpactedFeatures;
 import com.feature.flags.model.ImpactedModules;
+import com.feature.flags.model.Modules;
 import com.feature.flags.model.SearchKeywords;
 import com.feature.flags.service.FeatureFlagService;
 import com.feature.flags.service.FeatureFlagStatusService;
+import com.feature.flags.service.FeaturesService;
 import com.feature.flags.service.ImpactedFeatureService;
 import com.feature.flags.service.ImpactedModuleService;
+import com.feature.flags.service.ModulesService;
 import com.feature.flags.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -22,6 +26,8 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 import static com.feature.flags.model.SearchObjects.FFNAME;
 
@@ -44,6 +50,12 @@ public class FeatureFlagResource {
     @Autowired
     SearchService searchService;
 
+    @Autowired
+    ModulesService modulesService;
+
+    @Autowired
+    FeaturesService featuresService;
+
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createFeatureFlag(String name,
                                                     String summary,
@@ -63,7 +75,24 @@ public class FeatureFlagResource {
         if (existing != null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name already exist\" }");
         }
-        //Todo : Add check if impacted modules and features are valid
+        final Set<String> modules = modulesService.getAll().stream().map(Modules::getId).collect(Collectors.toSet());
+        if (!modules.contains(ownerModule)) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid owner module\" }");
+        }
+        for (String im : impactedModules) {
+            if (!modules.contains(im)) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted module : " + im + "\" }");
+            }
+        }
+        final Set<String> features = featuresService.getAll().stream().map(Features::getId).collect(Collectors.toSet());
+        if (!features.contains(ownerFeature)) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid owner feature\" }");
+        }
+        for (String im : impactedFeatures) {
+            if (!features.contains(im)) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted feature : " + im + "\" }");
+            }
+        }
         final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, ownerFeature,
                 maxGranularity, training, type, needsConfirmation, deprecationFlow, reasonForIntroduction,
                 new Date(), new Date(), createdById,
@@ -72,9 +101,11 @@ public class FeatureFlagResource {
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, FeatureFlagLevel.SYSTEM,
                 "SYSTEM", createdById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
+        impactedModuleService.insertImpactedModule(new ImpactedModules(name, ownerModule));
         for (String im : impactedModules) {
             impactedModuleService.insertImpactedModule(new ImpactedModules(name, im));
         }
+        impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, ownerFeature));
         for (String imf : impactedFeatures) {
             impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
         }
