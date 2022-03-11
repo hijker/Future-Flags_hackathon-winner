@@ -28,4 +28,8 @@ public class FeatureFlagDaoService {
     public List<FeatureFlag> getAllFeatureFlags() {
         return featureFlagRepository.findAll();
     }
+
+    public void deleteFeatureFlag(String name) {
+        featureFlagRepository.deleteByName(name);
+    }
 }

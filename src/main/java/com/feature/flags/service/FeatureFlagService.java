@@ -24,4 +24,8 @@ public class FeatureFlagService {
     public List<FeatureFlag> getAllFeatureFlags() {
         return featureFlagDaoService.getAllFeatureFlags();
     }
+
+    public void deleteFeatureFlag(String name) {
+        featureFlagDaoService.deleteFeatureFlag(name);
+    }
 }

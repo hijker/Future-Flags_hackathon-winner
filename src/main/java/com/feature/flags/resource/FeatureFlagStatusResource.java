@@ -15,6 +15,7 @@ import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -65,6 +66,24 @@ public class FeatureFlagStatusResource {
         }
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, levelValue, updatedById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
+        return ResponseEntity.ok("{ \"message\" : \"Success\" }");
+    }
+
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteFeatureFlagStatus(String name,
+                                                          FeatureFlagLevel level,
+                                                          String levelValue) {
+        if (level == null) {
+            return ResponseEntity.badRequest().body("No level provided");
+        }
+        final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
+        if (existing == null) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
+        }
+        if (level == FeatureFlagLevel.SYSTEM) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag at system level cannot be deleted\" }");
+        }
+        featureFlagStatusService.deleteStatus(name, level, levelValue);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

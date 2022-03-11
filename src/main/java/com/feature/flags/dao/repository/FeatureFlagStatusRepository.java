@@ -27,4 +27,6 @@ public interface FeatureFlagStatusRepository extends JpaRepository<FeatureFlagSt
             "feature_flag_status.level_value = :levelValue and " +
             "feature_flag.name = :name", nativeQuery = true)
     FeatureFlagStatusResponse getFeatureFlagStatusByNameAndLevelAndLevelValue(String name, String level, String levelValue);
+
+    void deleteAllByFlag_Name(String name);
 }

@@ -52,4 +52,12 @@ public class FeatureFlagStatusDaoService {
                 response.getOwner_module(),
                 response.getLevel());
     }
+
+    public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {
+        this.featureFlagStatusRepository.deleteById(String.join(":", name, level.name(), levelValue));
+    }
+
+    public void deleteAllStatus(String name) {
+        featureFlagStatusRepository.deleteAllByFlag_Name(name);
+    }
 }

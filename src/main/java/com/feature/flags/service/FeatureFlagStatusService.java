@@ -58,4 +58,14 @@ public class FeatureFlagStatusService {
         redisService.setValue(name + ":" + level.name() + ":" + levelValue, featureFlagStatusByLevelAndLevelValueAndName);
         return featureFlagStatusByLevelAndLevelValueAndName;
     }
+
+    public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {
+        redisService.deleteAllKeyFormRedis();
+        this.featureFlagStatusDaoService.deleteStatus(name, level, levelValue);
+    }
+
+    public void deleteAllStatus(String name) {
+        redisService.deleteAllKeyFormRedis();
+        featureFlagStatusDaoService.deleteAllStatus(name);
+    }
 }

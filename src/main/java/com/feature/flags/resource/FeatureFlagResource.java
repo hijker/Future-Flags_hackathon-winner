@@ -18,8 +18,10 @@ import com.feature.flags.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -110,6 +112,69 @@ public class FeatureFlagResource {
             impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
         }
         searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name()));
+        return ResponseEntity.ok("{ \"message\" : \"Success\" }");
+    }
+
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateFeatureFlag(String name,
+                                                    String summary,
+                                                    String description,
+                                                    String ownerModule,
+                                                    String ownerFeature,
+                                                    @RequestParam List<String> impactedModules,
+                                                    @RequestParam List<String> impactedFeatures,
+                                                    String maxGranularity,
+                                                    String training,
+                                                    String type,
+                                                    Boolean needsConfirmation,
+                                                    String deprecationFlow,
+                                                    String reasonForIntroduction,
+                                                    String createdById) {
+        final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
+        if (existing == null) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
+        }
+        final Set<String> modules = modulesService.getAll().stream().map(Modules::getId).collect(Collectors.toSet());
+        if (!modules.contains(ownerModule)) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid owner module\" }");
+        }
+        for (String im : impactedModules) {
+            if (!modules.contains(im)) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted module : " + im + "\" }");
+            }
+        }
+        final Set<String> features = featuresService.getAll().stream().map(Features::getId).collect(Collectors.toSet());
+        if (!features.contains(ownerFeature)) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid owner feature\" }");
+        }
+        for (String im : impactedFeatures) {
+            if (!features.contains(im)) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted feature : " + im + "\" }");
+            }
+        }
+        final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, ownerFeature,
+                maxGranularity, training, type, needsConfirmation, deprecationFlow, reasonForIntroduction,
+                new Date(), new Date(), createdById,
+                String.join("::", impactedModules), String.join("::", impactedFeatures));
+        featureFlagService.insertFeatureFlag(featureFlag);
+        impactedModuleService.deleteImpactedModuleByName(name);
+        impactedModuleService.insertImpactedModule(new ImpactedModules(name, ownerModule));
+        for (String im : impactedModules) {
+            impactedModuleService.insertImpactedModule(new ImpactedModules(name, im));
+        }
+        impactedFeatureService.deleteImpactedFeatureByName(name);
+        impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, ownerFeature));
+        for (String imf : impactedFeatures) {
+            impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
+        }
+        searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name()));
+        return ResponseEntity.ok("{ \"message\" : \"Success\" }");
+    }
+
+    @DeleteMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> deleteFeatureFlag(String name) {
+        featureFlagStatusService.deleteAllStatus(name);
+        featureFlagService.deleteFeatureFlag(name);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

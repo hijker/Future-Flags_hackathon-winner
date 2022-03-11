@@ -25,4 +25,7 @@ public class ImpactedModuleDaoService {
         return impactedModulesRepository.findByImpactedModule(module);
     }
 
+    public void deleteByName(String name) {
+        impactedModulesRepository.deleteByFeatureFlagName(name);
+    }
 }

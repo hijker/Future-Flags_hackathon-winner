@@ -8,4 +8,6 @@ import java.util.List;
 public interface ImpactedModulesRepository extends JpaRepository<ImpactedModules, String> {
 
     List<ImpactedModules> findByImpactedModule(String module);
+
+    void deleteByFeatureFlagName(String name);
 }

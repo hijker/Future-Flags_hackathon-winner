@@ -25,4 +25,7 @@ public class ImpactedFeatureDaoService {
         return impactedFeaturesRepository.findByImpactedFeature(feature);
     }
 
+    public void deleteByFeatureFlagName(String name) {
+        impactedFeaturesRepository.deleteByFeatureFlagName(name);
+    }
 }

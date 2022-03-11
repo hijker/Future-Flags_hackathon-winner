@@ -20,4 +20,8 @@ public class ImpactedModuleService {
     public List<ImpactedModules> getByModule(String module) {
         return impactedModuleDaoService.getByModule(module);
     }
+
+    public void deleteImpactedModuleByName(String name) {
+        impactedModuleDaoService.deleteByName(name);
+    }
 }
