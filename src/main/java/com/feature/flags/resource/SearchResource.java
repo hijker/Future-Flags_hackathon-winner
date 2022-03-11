@@ -48,4 +48,12 @@ public class SearchResource {
                 .getByPrefix(key).stream().collect(Collectors.groupingBy(SearchKeywords::getType));
         return ResponseEntity.ok(collect);
     }
+
+    @GetMapping(value = "/ffprefix", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<SearchKeywords>> getFFPrefixSuggestions(String key) {
+        final List<SearchKeywords> collect = searchService
+                .getByFFPrefix(key).stream().collect(Collectors.toList());
+        return ResponseEntity.ok(collect);
+    }
+
 }

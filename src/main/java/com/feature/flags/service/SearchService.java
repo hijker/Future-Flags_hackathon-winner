@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Service;
 
+import java.util.Arrays;
+
 @Service
 public class SearchService {
 
@@ -28,4 +30,7 @@ public class SearchService {
         return daoService.getAll();
     }
 
+    public Page<SearchKeywords> getByFFPrefix(String key) {
+        return daoService.getFFByPrefix(key);
+    }
 }
