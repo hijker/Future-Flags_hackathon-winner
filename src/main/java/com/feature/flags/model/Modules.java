@@ -1,20 +1,21 @@
 package com.feature.flags.model;
 
+import org.springframework.data.elasticsearch.annotations.Document;
+
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
-@Entity
-@Table
-public class Tags {
+@Document(indexName = "modules")
+public class Modules {
 
     @Id
     String id;
 
-    public Tags() {
+    public Modules() {
     }
 
-    public Tags(String id) {
+    public Modules(String id) {
         this.id = id;
     }
 

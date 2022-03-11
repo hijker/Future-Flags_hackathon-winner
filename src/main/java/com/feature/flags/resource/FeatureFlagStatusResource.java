@@ -3,10 +3,14 @@ package com.feature.flags.resource;
 import com.feature.flags.model.FeatureFlag;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
-import com.feature.flags.model.StatusResponsePOJO;
+import com.feature.flags.model.ImpactedFeatures;
+import com.feature.flags.model.ImpactedModules;
+import com.feature.flags.model.StatusResponse;
 import com.feature.flags.model.Users;
 import com.feature.flags.service.FeatureFlagService;
 import com.feature.flags.service.FeatureFlagStatusService;
+import com.feature.flags.service.ImpactedFeatureService;
+import com.feature.flags.service.ImpactedModuleService;
 import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
@@ -40,6 +44,12 @@ public class FeatureFlagStatusResource {
     @Autowired
     UserService userService;
 
+    @Autowired
+    ImpactedFeatureService impactedFeatureService;
+
+    @Autowired
+    ImpactedModuleService impactedModuleService;
+
     @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateFeatureFlagStatus(String name,
                                                           Boolean value,
@@ -58,34 +68,48 @@ public class FeatureFlagStatusResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
-    @GetMapping(value = "/get_all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<StatusResponsePOJO>>> getAllFeatureFlags() {
-        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService.getAllFeatureFlagStatuses()));
-    }
+//    @GetMapping(value = "/get_all", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Map<String, List<StatusResponse>>> getAllFeatureFlags() {
+//        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService.getAllFeatureFlagStatuses()));
+//    }
 
     @GetMapping(value = "/get_all_global", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<StatusResponsePOJO>>> getAllGlobalFeatureFlags() {
+    public ResponseEntity<Map<String, List<StatusResponse>>> getAllGlobalFeatureFlags() {
         return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService
                 .getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel.SYSTEM, "SYSTEM")));
     }
 
-    @GetMapping(value = "/get_all_specific", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<StatusResponsePOJO>>> getAllSpecificFeatureFlags(FeatureFlagLevel level,
-                                                                                            String levelValue) {
-        if (level == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService
-                .getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue)));
-    }
+//    @GetMapping(value = "/get_all_specific", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Map<String, List<StatusResponse>>> getAllSpecificFeatureFlags(FeatureFlagLevel level,
+//                                                                                        String levelValue) {
+//        if (level == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(getGroupedResponse(featureFlagStatusService
+//                .getAllFeatureFlagStatusByLevelAndLevelValue(level, levelValue)));
+//    }
 
     @GetMapping(value = "/get_all_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<StatusResponsePOJO>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
-                                                                                            String levelValue) {
-        if (level == null) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<Map<String, List<StatusResponse>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
+                                                                                        String levelValue,
+                                                                                        String impactedModule,
+                                                                                        String impactedFeature) {
+        boolean filterOn = false;
+        Set<String> allowedFLags = new HashSet<>();
+        if (impactedModule != null) {
+            filterOn = true;
+            allowedFLags.addAll(impactedModuleService.getByModule(impactedModule)
+                    .stream().map(ImpactedModules::getFeatureFlagName)
+                    .collect(Collectors.toList()));
         }
-        Map<String, List<StatusResponsePOJO>> response = new HashMap<>();
+        if (impactedFeature != null) {
+            filterOn = true;
+            allowedFLags.addAll(impactedFeatureService.getByFeature(impactedFeature)
+                    .stream().map(ImpactedFeatures::getFeatureFlagName)
+                    .collect(Collectors.toList()));
+        }
+
+        Map<String, List<StatusResponse>> response = new HashMap<>();
         Set<String> setFlags = new HashSet<>();
 
         final FeatureFlagLevel[] values = FeatureFlagLevel.values();
@@ -93,12 +117,12 @@ public class FeatureFlagStatusResource {
 
         for (FeatureFlagLevel l : values) {
             if (l.ordinal() >= level.ordinal()) {
-                for (StatusResponsePOJO r : featureFlagStatusService
+                for (StatusResponse r : featureFlagStatusService
                         .getAllFeatureFlagStatusByLevelAndLevelValue(l, getLevelValueForLevelFromLevel(level, levelValue, l))) {
-                    if (!setFlags.contains(r.getName())) {
-                        final List<StatusResponsePOJO> existing = response.getOrDefault(r.getOwner_module(), new ArrayList<>());
+                    if (!setFlags.contains(r.getName()) && (!filterOn || allowedFLags.contains(r.getName()))) {
+                        final List<StatusResponse> existing = response.getOrDefault(r.getOwnerModule(), new ArrayList<>());
                         existing.add(r);
-                        response.put(r.getOwner_module(), existing);
+                        response.put(r.getOwnerModule(), existing);
                         setFlags.add(r.getName());
                     }
                 }
@@ -107,19 +131,19 @@ public class FeatureFlagStatusResource {
         return ResponseEntity.ok().body(response);
     }
 
-    @GetMapping(value = "/get_specific", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Boolean> getSpecificFeatureFlags(String name,
-                                                           FeatureFlagLevel level,
-                                                           String levelValue) {
-        if (level == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        if (name == null) {
-            return ResponseEntity.badRequest().build();
-        }
-        final StatusResponsePOJO status = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
-        return ResponseEntity.ok(status != null && status.getValue());
-    }
+//    @GetMapping(value = "/get_specific", produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<Boolean> getSpecificFeatureFlags(String name,
+//                                                           FeatureFlagLevel level,
+//                                                           String levelValue) {
+//        if (level == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        if (name == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        final StatusResponse status = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
+//        return ResponseEntity.ok(status != null && status.getValue());
+//    }
 
 
     @GetMapping(value = "/get_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -136,7 +160,7 @@ public class FeatureFlagStatusResource {
         Arrays.sort(values, Comparator.comparingInt(Enum::ordinal));
         for (FeatureFlagLevel l : values) {
             if (l.ordinal() >= level.ordinal()) {
-                final StatusResponsePOJO status = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
+                final StatusResponse status = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
                 if (status != null) {
                     return ResponseEntity.ok(status.getValue());
                 }
@@ -174,8 +198,8 @@ public class FeatureFlagStatusResource {
         return "SYSTEM";
     }
 
-    Map<String, List<StatusResponsePOJO>> getGroupedResponse(List<StatusResponsePOJO> response) {
+    Map<String, List<StatusResponse>> getGroupedResponse(List<StatusResponse> response) {
         return response.stream()
-                .collect(Collectors.groupingBy(StatusResponsePOJO::getOwner_module));
+                .collect(Collectors.groupingBy(StatusResponse::getOwnerModule));
     }
 }

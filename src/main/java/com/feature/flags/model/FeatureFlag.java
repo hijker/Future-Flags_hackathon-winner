@@ -14,6 +14,7 @@ public class FeatureFlag {
     private String summary;                 //Summary- 1 liner
     private String description;             //Description
     private String ownerModule;             //Owner modules-
+    private String ownerFeature;
     private String maxGranularity;          //Applicable on level from
     private String training;                //link to enablement training
     private String type;                    //What kind of ff is this? Partial roll out due to monetization of a feature | Slow roll out for the risk/impact it can cause/meant for smaller audience
@@ -23,6 +24,8 @@ public class FeatureFlag {
     private Date createdAt;
     private Date updatedAt;
     private String createdById;
+    private String impactedModules;
+    private String impactedFeatures;
 
     //To be moved to new table
 //    List<String> parentFlags; //Pre-requisite ff- give a warning, one level | no option to enable block going further(disable the toggle)
@@ -44,6 +47,7 @@ public class FeatureFlag {
                        String summary,
                        String description,
                        String ownerModule,
+                       String ownerFeature,
                        String maxGranularity,
                        String training,
                        String type,
@@ -52,10 +56,13 @@ public class FeatureFlag {
                        String reasonForIntroduction,
                        Date createdAt,
                        Date updatedAt,
-                       String createdById) {
+                       String createdById,
+                       String impactedModules,
+                       String impactedFeatures) {
         this.name = name;
         this.summary = summary;
         this.description = description;
+        this.ownerFeature = ownerFeature;
         this.ownerModule = ownerModule;
         this.maxGranularity = maxGranularity;
         this.training = training;
@@ -66,6 +73,8 @@ public class FeatureFlag {
         this.createdAt = createdAt;
         this.updatedAt = updatedAt;
         this.createdById = createdById;
+        this.impactedModules = impactedModules;
+        this.impactedFeatures = impactedFeatures;
     }
 
     public String getName() {
@@ -82,6 +91,10 @@ public class FeatureFlag {
 
     public String getOwnerModule() {
         return ownerModule;
+    }
+
+    public String getOwnerFeature() {
+        return ownerFeature;
     }
 
     public String getMaxGranularity() {
@@ -120,22 +133,11 @@ public class FeatureFlag {
         return createdById;
     }
 
-    @Override
-    public String toString() {
-        return "FeatureFlag{" +
-                "name='" + name + '\'' +
-                ", summary='" + summary + '\'' +
-                ", description='" + description + '\'' +
-                ", ownerModule='" + ownerModule + '\'' +
-                ", maxGranularity='" + maxGranularity + '\'' +
-                ", training='" + training + '\'' +
-                ", type='" + type + '\'' +
-                ", needsConfirmation=" + needsConfirmation +
-                ", deprecationFlow='" + deprecationFlow + '\'' +
-                ", reasonForIntroduction='" + reasonForIntroduction + '\'' +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", createdById=" + createdById +
-                '}';
+    public String getImpactedModules() {
+        return impactedModules;
+    }
+
+    public String getImpactedFeatures() {
+        return impactedFeatures;
     }
 }

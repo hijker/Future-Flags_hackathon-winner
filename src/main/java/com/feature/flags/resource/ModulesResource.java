@@ -1,9 +1,9 @@
 package com.feature.flags.resource;
 
-import com.feature.flags.model.Tags;
-import com.feature.flags.model.Users;
-import com.feature.flags.service.TagsService;
-import com.feature.flags.service.UserService;
+import com.feature.flags.model.Modules;
+import com.feature.flags.model.SearchKeywords;
+import com.feature.flags.service.ModulesService;
+import com.feature.flags.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,23 +14,29 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
+import static com.feature.flags.model.SearchObjects.MODULE;
+
 @RestController
-@RequestMapping("/tag")
-public class TagsResource {
+@RequestMapping("/module")
+public class ModulesResource {
 
     @Autowired
-    TagsService tagsService;
+    ModulesService modulesService;
+
+    @Autowired
+    SearchService searchService;
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> createUser(String id) {
-        Tags tag = new Tags(id);
-        tagsService.insertTag(tag);
+    public ResponseEntity<String> createModule(String id) {
+        Modules module = new Modules(id);
+        modulesService.insertTag(module);
+        searchService.insertSearchKeyword(new SearchKeywords(id, MODULE.name()));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Tags>> getAllUsers() {
-        return ResponseEntity.ok(tagsService.getAll());
+    public ResponseEntity<List<Modules>> getAllModules() {
+        return ResponseEntity.ok(modulesService.getAll());
     }
 
 }

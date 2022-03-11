@@ -1,7 +1,7 @@
 package com.feature.flags.resource;
 
-import com.feature.flags.model.ElasticSearchPOJO;
-import com.feature.flags.service.ElasticSearchService;
+import com.feature.flags.model.SearchKeywords;
+import com.feature.flags.service.SearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -15,34 +15,33 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/search")
-public class ElasticSearchResource {
+public class SearchResource {
 
     @Autowired
-    ElasticSearchService elasticSearchService;
+    SearchService searchService;
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createEntry(String key,
-                                              String value,
                                               String type) {
-        ElasticSearchPOJO pojo = new ElasticSearchPOJO(key, value, type);
-        elasticSearchService.insertElasticSearchPOJO(pojo);
+        SearchKeywords pojo = new SearchKeywords(key, type);
+        searchService.insertSearchKeyword(pojo);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ElasticSearchPOJO>> getAllUsers() {
-        List<ElasticSearchPOJO> list = new ArrayList<>();
-        elasticSearchService.getAll().forEach(list::add);
+    public ResponseEntity<List<SearchKeywords>> getAllUsers() {
+        List<SearchKeywords> list = new ArrayList<>();
+        searchService.getAll().forEach(list::add);
         return ResponseEntity.ok(list);
     }
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ElasticSearchPOJO>> getSuggestions(String key) {
-        return ResponseEntity.ok(elasticSearchService.getByKey(key).toList());
+    public ResponseEntity<List<SearchKeywords>> getSuggestions(String key) {
+        return ResponseEntity.ok(searchService.getByKey(key).toList());
     }
 
     @GetMapping(value = "/prefix", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<ElasticSearchPOJO>> getPrefixSuggestions(String key) {
-        return ResponseEntity.ok(elasticSearchService.getByPrefix(key).toList());
+    public ResponseEntity<List<SearchKeywords>> getPrefixSuggestions(String key) {
+        return ResponseEntity.ok(searchService.getByPrefix(key).toList());
     }
 }

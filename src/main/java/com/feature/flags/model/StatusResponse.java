@@ -2,7 +2,7 @@ package com.feature.flags.model;
 
 import java.util.Date;
 
-public class StatusResponsePOJO {
+public class StatusResponse {
 
     private String name;
 
@@ -16,10 +16,10 @@ public class StatusResponsePOJO {
 
     private FeatureFlagLevel level;
 
-    public StatusResponsePOJO() {
+    public StatusResponse() {
     }
 
-    public StatusResponsePOJO(String name, Boolean value, String summary, Date updated_At, String owner_module, FeatureFlagLevel level) {
+    public StatusResponse(String name, Boolean value, String summary, Date updated_At, String owner_module, FeatureFlagLevel level) {
         this.name = name;
         this.value = value;
         this.summary = summary;
@@ -40,11 +40,11 @@ public class StatusResponsePOJO {
         return summary;
     }
 
-    public Date getUpdated_At() {
+    public Date getUpdatedAt() {
         return updated_At;
     }
 
-    public String getOwner_module() {
+    public String getOwnerModule() {
         return owner_module;
     }
 

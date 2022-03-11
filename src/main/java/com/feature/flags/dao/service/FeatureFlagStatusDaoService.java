@@ -4,7 +4,7 @@ import com.feature.flags.dao.repository.FeatureFlagStatusRepository;
 import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.FeatureFlagStatus;
 import com.feature.flags.model.FeatureFlagStatusResponse;
-import com.feature.flags.model.StatusResponsePOJO;
+import com.feature.flags.model.StatusResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,26 +26,26 @@ public class FeatureFlagStatusDaoService {
         this.featureFlagStatusRepository.save(featureFlagStatus);
     }
 
-    public List<StatusResponsePOJO> getAllFeatureFlagStatus() {
+    public List<StatusResponse> getAllFeatureFlagStatus() {
         return this.featureFlagStatusRepository.getAllFeatureFlagStatusResponse()
                 .stream()
                 .map(this::getSRP)
                 .collect(Collectors.toList());
     }
 
-    public List<StatusResponsePOJO> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
+    public List<StatusResponse> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
         return this.featureFlagStatusRepository.getAllFeatureFlagStatusByLevelAndLevelValue(level.name(), levelValue)
                 .stream()
                 .map(this::getSRP)
                 .collect(Collectors.toList());
     }
 
-    public StatusResponsePOJO getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
+    public StatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
         return getSRP(this.featureFlagStatusRepository.getFeatureFlagStatusByNameAndLevelAndLevelValue(name, level.name(), levelValue));
     }
 
-    StatusResponsePOJO getSRP(FeatureFlagStatusResponse response) {
-        return new StatusResponsePOJO(response.getName(),
+    StatusResponse getSRP(FeatureFlagStatusResponse response) {
+        return new StatusResponse(response.getName(),
                 response.getValue(),
                 response.getSummary(),
                 response.getUpdated_At(),
