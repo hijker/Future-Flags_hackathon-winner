@@ -26,6 +26,7 @@ public class FeatureFlag {
     private String createdById;
     private String impactedModules;
     private String impactedFeatures;
+    private String preRequisiteFlags;
 
     //To be moved to new table
 //    List<String> parentFlags; //Pre-requisite ff- give a warning, one level | no option to enable block going further(disable the toggle)
@@ -58,7 +59,8 @@ public class FeatureFlag {
                        Date updatedAt,
                        String createdById,
                        String impactedModules,
-                       String impactedFeatures) {
+                       String impactedFeatures,
+                       String preRequisiteFlags) {
         this.name = name;
         this.summary = summary;
         this.description = description;
@@ -75,6 +77,7 @@ public class FeatureFlag {
         this.createdById = createdById;
         this.impactedModules = impactedModules;
         this.impactedFeatures = impactedFeatures;
+        this.preRequisiteFlags = preRequisiteFlags;
     }
 
     public String getName() {
@@ -139,5 +142,9 @@ public class FeatureFlag {
 
     public String getImpactedFeatures() {
         return impactedFeatures;
+    }
+
+    public String getPreRequisiteFlags() {
+        return preRequisiteFlags;
     }
 }

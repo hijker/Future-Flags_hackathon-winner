@@ -56,13 +56,23 @@ public class FeatureFlagStatusResource {
                                                           Boolean value,
                                                           FeatureFlagLevel level,
                                                           String levelValue,
-                                                          String updatedById) {
+                                                          String updatedById,
+                                                          Boolean force) {
         if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing == null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
+        }
+        if (!force) {
+            final String[] split = existing.getPreRequisiteFlags().split("::");
+            for (String s : split) {
+                final ResponseEntity<Boolean> fallbackFeatureFlags = getFallbackFeatureFlags(s, level, levelValue);
+                if (Boolean.FALSE.equals(fallbackFeatureFlags.getBody())) {
+                    return ResponseEntity.badRequest().body("{ \"message\" : \"Prerequisite Feature flag " + s + " is not enabled\" }");
+                }
+            }
         }
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, levelValue, updatedById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
@@ -122,10 +132,15 @@ public class FeatureFlagStatusResource {
                     .collect(Collectors.toList()));
         }
         if (impactedFeature != null) {
-            filterOn = true;
-            allowedFLags.addAll(impactedFeatureService.getByFeature(impactedFeature)
+            final Set<String> collect = impactedFeatureService.getByFeature(impactedFeature)
                     .stream().map(ImpactedFeatures::getFeatureFlagName)
-                    .collect(Collectors.toList()));
+                    .collect(Collectors.toSet());
+            if (filterOn) {
+                allowedFLags.retainAll(collect);
+            } else {
+                allowedFLags = collect;
+            }
+            filterOn = true;
         }
 
         Map<String, List<StatusResponse>> response = new HashMap<>();

@@ -72,7 +72,8 @@ public class FeatureFlagResource {
                                                     Boolean needsConfirmation,
                                                     String deprecationFlow,
                                                     String reasonForIntroduction,
-                                                    String createdById) {
+                                                    String createdById,
+                                                    @RequestParam List<String> preRequisiteFlags) {
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing != null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name already exist\" }");
@@ -95,10 +96,17 @@ public class FeatureFlagResource {
                 return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted feature : " + im + "\" }");
             }
         }
+        for (String p : preRequisiteFlags) {
+            final FeatureFlag featureFlag = featureFlagService.getFeatureFlag(p);
+            if (featureFlag == null) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid pre-requisite feature : " + p + "\" }");
+            }
+        }
         final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, ownerFeature,
                 maxGranularity, training, type, needsConfirmation, deprecationFlow, reasonForIntroduction,
                 new Date(), new Date(), createdById,
-                String.join("::", impactedModules), String.join("::", impactedFeatures));
+                String.join("::", impactedModules), String.join("::", impactedFeatures),
+                String.join("::", preRequisiteFlags));
         featureFlagService.insertFeatureFlag(featureFlag);
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(featureFlag, false, FeatureFlagLevel.SYSTEM,
                 "SYSTEM", createdById, new Date());
@@ -129,7 +137,8 @@ public class FeatureFlagResource {
                                                     Boolean needsConfirmation,
                                                     String deprecationFlow,
                                                     String reasonForIntroduction,
-                                                    String createdById) {
+                                                    String createdById,
+                                                    @RequestParam List<String> preRequisiteFlags) {
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing == null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
@@ -152,10 +161,17 @@ public class FeatureFlagResource {
                 return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid impacted feature : " + im + "\" }");
             }
         }
+        for (String p : preRequisiteFlags) {
+            final FeatureFlag featureFlag = featureFlagService.getFeatureFlag(p);
+            if (featureFlag == null) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Invalid pre-requisite feature : " + p + "\" }");
+            }
+        }
         final FeatureFlag featureFlag = new FeatureFlag(name, summary, description, ownerModule, ownerFeature,
                 maxGranularity, training, type, needsConfirmation, deprecationFlow, reasonForIntroduction,
                 new Date(), new Date(), createdById,
-                String.join("::", impactedModules), String.join("::", impactedFeatures));
+                String.join("::", impactedModules), String.join("::", impactedFeatures),
+                String.join("::", preRequisiteFlags));
         featureFlagService.insertFeatureFlag(featureFlag);
         impactedModuleService.deleteImpactedModuleByName(name);
         impactedModuleService.insertImpactedModule(new ImpactedModules(name, ownerModule));
