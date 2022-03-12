@@ -207,6 +207,11 @@ public class FeatureFlagStatusResource {
         if (name == null) {
             return ResponseEntity.badRequest().build();
         }
+        name = name.trim();
+        final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
+        if (existing == null) {
+            return ResponseEntity.badRequest().build();
+        }
         final FeatureFlagLevel[] values = FeatureFlagLevel.values();
         Arrays.sort(values, Comparator.comparingInt(Enum::ordinal));
         for (FeatureFlagLevel l : values) {
