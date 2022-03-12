@@ -33,4 +33,8 @@ public class SearchService {
     public Page<SearchKeywords> getByFFPrefix(String key) {
         return daoService.getFFByPrefix(key);
     }
+
+    public void deleteKeyWord(SearchKeywords searchKeywords) {
+        daoService.deleteKeyWord(searchKeywords);
+    }
 }

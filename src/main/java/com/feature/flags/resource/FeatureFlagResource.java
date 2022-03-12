@@ -14,6 +14,7 @@ import com.feature.flags.service.FeaturesService;
 import com.feature.flags.service.ImpactedFeatureService;
 import com.feature.flags.service.ImpactedModuleService;
 import com.feature.flags.service.ModulesService;
+import com.feature.flags.service.RedisService;
 import com.feature.flags.service.SearchService;
 import org.elasticsearch.core.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -60,6 +61,9 @@ public class FeatureFlagResource {
 
     @Autowired
     FeaturesService featuresService;
+
+    @Autowired
+    RedisService redisService;
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createFeatureFlag(String name,
@@ -227,7 +231,7 @@ public class FeatureFlagResource {
         for (String imf : impactedFeatures) {
             impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
         }
-        searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name()));
+        redisService.deleteAllKey();
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
@@ -237,6 +241,7 @@ public class FeatureFlagResource {
         name = name.trim();
         featureFlagStatusService.deleteAllStatus(name);
         featureFlagService.deleteFeatureFlag(name);
+        searchService.deleteKeyWord(new SearchKeywords(name, FFNAME.name()));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

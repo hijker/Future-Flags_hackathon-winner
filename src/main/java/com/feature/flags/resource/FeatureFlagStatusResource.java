@@ -72,7 +72,7 @@ public class FeatureFlagStatusResource {
         }
         levelValue = levelValue.trim();
         updatedById = updatedById.trim();
-        if (!force && existing.getPreRequisiteFlags() != null) {
+        if (!force && existing.getPreRequisiteFlags() != null && !"".equals(existing.getPreRequisiteFlags())) {
             final String[] split = existing.getPreRequisiteFlags().split("::");
             for (String s : split) {
                 final ResponseEntity<Boolean> fallbackFeatureFlags = getFallbackFeatureFlags(s, level, levelValue);
