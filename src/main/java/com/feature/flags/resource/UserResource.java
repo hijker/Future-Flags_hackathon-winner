@@ -34,7 +34,6 @@ public class UserResource {
                                              String role,
                                              String org,
                                              String domain) {
-
         Users users = new Users(id, email, role, org, domain);
         userService.insertUser(users);
         searchService.insertSearchKeyword(new SearchKeywords(id, USER.name()));

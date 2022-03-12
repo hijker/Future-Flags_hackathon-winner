@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.feature.flags.model.SearchObjects.FEATURE;
 
@@ -35,8 +36,8 @@ public class FeaturesResource {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Features>> getAllFeatures() {
-        return ResponseEntity.ok(featuresService.getAll());
+    public ResponseEntity<List<String>> getAllFeatures() {
+        return ResponseEntity.ok(featuresService.getAll().stream().map(Features::getId).collect(Collectors.toList()));
     }
 
 }

@@ -123,6 +123,10 @@ public class FeatureFlagStatusResource {
                                                                                         String levelValue,
                                                                                         String impactedModule,
                                                                                         String impactedFeature) {
+        if(level == null) {
+            level = FeatureFlagLevel.SYSTEM;
+            levelValue = "SYSTEM";
+        }
         boolean filterOn = false;
         Set<String> allowedFLags = new HashSet<>();
         if (impactedModule != null) {

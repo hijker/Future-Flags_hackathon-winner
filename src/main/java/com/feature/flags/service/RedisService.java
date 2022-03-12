@@ -24,8 +24,12 @@ public class RedisService {
         return redisTemplate.opsForValue().get(key);
     }
 
-    public void deleteAllKeyFormRedis() {
-        final Set<String> keys = redisTemplate.keys("*");
+    public void deleteKey(String key) {
+        redisTemplate.delete(key);
+    }
+
+    public void deleteAllKeyFormRedisStartsWith(String name) {
+        final Set<String> keys = redisTemplate.keys(name + "*");
         if (keys != null) {
             redisTemplate.delete(keys);
         }

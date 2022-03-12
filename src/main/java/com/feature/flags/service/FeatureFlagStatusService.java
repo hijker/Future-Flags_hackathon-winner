@@ -19,20 +19,9 @@ public class FeatureFlagStatusService {
     RedisService redisService;
 
     public void insertFeatureFlagStatus(FeatureFlagStatus status) {
-        redisService.deleteAllKeyFormRedis();
+        redisService.deleteKey(status.getLevel().name() + ":" + status.getLevelValue());
+        redisService.deleteKey(status.getFlag().getName() + ":" + status.getLevel().name() + ":" + status.getLevelValue());
         featureFlagStatusDaoService.insertFeatureFlagStatus(status);
-    }
-
-    public List<StatusResponse> getAllFeatureFlagStatuses() {
-        List<StatusResponse> allFeatureFlagStatuses = (List<StatusResponse>) redisService
-                .getValue("AllFeatureFlagStatuses");
-        if (allFeatureFlagStatuses != null) {
-            System.out.println("Got value from redis for key : " + "AllFeatureFlagStatuses");
-            return allFeatureFlagStatuses;
-        }
-        allFeatureFlagStatuses = featureFlagStatusDaoService.getAllFeatureFlagStatus();
-        redisService.setValue("AllFeatureFlagStatuses", allFeatureFlagStatuses);
-        return allFeatureFlagStatuses;
     }
 
     public List<StatusResponse> getAllFeatureFlagStatusByLevelAndLevelValue(FeatureFlagLevel level, String levelValue) {
@@ -60,12 +49,12 @@ public class FeatureFlagStatusService {
     }
 
     public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {
-        redisService.deleteAllKeyFormRedis();
+        redisService.deleteKey(name + ":" + level + ":" + levelValue);
         this.featureFlagStatusDaoService.deleteStatus(name, level, levelValue);
     }
 
     public void deleteAllStatus(String name) {
-        redisService.deleteAllKeyFormRedis();
+        redisService.deleteAllKeyFormRedisStartsWith(name);
         featureFlagStatusDaoService.deleteAllStatus(name);
     }
 }

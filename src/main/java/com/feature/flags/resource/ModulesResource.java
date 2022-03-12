@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.feature.flags.model.SearchObjects.MODULE;
 
@@ -35,8 +36,8 @@ public class ModulesResource {
     }
 
     @GetMapping(value = "/all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<List<Modules>> getAllModules() {
-        return ResponseEntity.ok(modulesService.getAll());
+    public ResponseEntity<List<String>> getAllModules() {
+        return ResponseEntity.ok(modulesService.getAll().stream().map(Modules::getId).collect(Collectors.toList()));
     }
 
 }

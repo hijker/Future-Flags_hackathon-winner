@@ -187,7 +187,7 @@ public class FeatureFlagResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
-    @DeleteMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
+    @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFeatureFlag(String name) {
         featureFlagStatusService.deleteAllStatus(name);
         featureFlagService.deleteFeatureFlag(name);
