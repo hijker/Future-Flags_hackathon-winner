@@ -18,7 +18,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -52,13 +52,16 @@ public class FeatureFlagStatusResource {
     @Autowired
     ImpactedModuleService impactedModuleService;
 
-    @PostMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
+    @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateFeatureFlagStatus(String name,
                                                           Boolean value,
                                                           FeatureFlagLevel level,
                                                           String levelValue,
                                                           String updatedById,
                                                           Boolean force) {
+        if (force == null) {
+            force = false;
+        }
         if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
@@ -69,7 +72,7 @@ public class FeatureFlagStatusResource {
         }
         levelValue = levelValue.trim();
         updatedById = updatedById.trim();
-        if (!force) {
+        if (!force && existing.getPreRequisiteFlags() != null) {
             final String[] split = existing.getPreRequisiteFlags().split("::");
             for (String s : split) {
                 final ResponseEntity<Boolean> fallbackFeatureFlags = getFallbackFeatureFlags(s, level, levelValue);
@@ -130,7 +133,7 @@ public class FeatureFlagStatusResource {
                                                                                         String levelValue,
                                                                                         String impactedModule,
                                                                                         String impactedFeature) {
-        if(level == null) {
+        if (level == null) {
             level = FeatureFlagLevel.SYSTEM;
             levelValue = "SYSTEM";
         }

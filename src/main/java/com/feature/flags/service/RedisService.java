@@ -28,6 +28,13 @@ public class RedisService {
         redisTemplate.delete(key);
     }
 
+    public void deleteAllKey() {
+        final Set<String> keys = redisTemplate.keys("*");
+        if (keys != null) {
+            redisTemplate.delete(keys);
+        }
+    }
+
     public void deleteAllKeyFormRedisStartsWith(String name) {
         final Set<String> keys = redisTemplate.keys(name + "*");
         if (keys != null) {

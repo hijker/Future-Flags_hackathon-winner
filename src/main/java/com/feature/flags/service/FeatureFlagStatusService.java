@@ -54,7 +54,7 @@ public class FeatureFlagStatusService {
     }
 
     public void deleteAllStatus(String name) {
-        redisService.deleteAllKeyFormRedisStartsWith(name);
+        redisService.deleteAllKey();
         featureFlagStatusDaoService.deleteAllStatus(name);
     }
 }
