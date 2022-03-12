@@ -29,6 +29,7 @@ public class ModulesResource {
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createModule(String id) {
+        id = id.trim();
         Modules module = new Modules(id);
         modulesService.insertTag(module);
         searchService.insertSearchKeyword(new SearchKeywords(id, MODULE.name()));

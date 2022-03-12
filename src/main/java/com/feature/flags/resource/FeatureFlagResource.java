@@ -74,6 +74,17 @@ public class FeatureFlagResource {
                                                     String reasonForIntroduction,
                                                     String createdById,
                                                     @RequestParam List<String> preRequisiteFlags) {
+        name = name.trim();
+        summary = summary.trim();
+        description = description.trim();
+        ownerModule = ownerModule.trim();
+        ownerFeature = ownerFeature.trim();
+        maxGranularity = maxGranularity.trim();
+        training = training.trim();
+        type = type.trim();
+        deprecationFlow = deprecationFlow.trim();
+        reasonForIntroduction = reasonForIntroduction.trim();
+        createdById = createdById.trim();
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing != null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name already exist\" }");
@@ -139,6 +150,17 @@ public class FeatureFlagResource {
                                                     String reasonForIntroduction,
                                                     String createdById,
                                                     @RequestParam List<String> preRequisiteFlags) {
+        name = name.trim();
+        summary = summary.trim();
+        description = description.trim();
+        ownerModule = ownerModule.trim();
+        ownerFeature = ownerFeature.trim();
+        maxGranularity = maxGranularity.trim();
+        training = training.trim();
+        type = type.trim();
+        deprecationFlow = deprecationFlow.trim();
+        reasonForIntroduction = reasonForIntroduction.trim();
+        createdById = createdById.trim();
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing == null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
@@ -189,6 +211,7 @@ public class FeatureFlagResource {
 
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFeatureFlag(String name) {
+        name = name.trim();
         featureFlagStatusService.deleteAllStatus(name);
         featureFlagService.deleteFeatureFlag(name);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
@@ -196,6 +219,7 @@ public class FeatureFlagResource {
 
     @GetMapping(value = "/available", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Boolean> isNameAvailableFeatureFlag(String name) {
+        name = name.trim();
         final FeatureFlag featureFlag = featureFlagService.getFeatureFlag(name);
         if (featureFlag != null) {
             return ResponseEntity.badRequest().body(false);
@@ -205,6 +229,7 @@ public class FeatureFlagResource {
 
     @GetMapping(value = "/get", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<FeatureFlag> getFeatureFlag(String name) {
+        name = name.trim();
         return ResponseEntity.ok(featureFlagService.getFeatureFlag(name));
     }
 

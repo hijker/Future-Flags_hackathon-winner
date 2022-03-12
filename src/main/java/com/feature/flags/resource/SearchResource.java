@@ -44,6 +44,7 @@ public class SearchResource {
 
     @GetMapping(value = "/prefix", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Map<String, List<SearchKeywords>>> getPrefixSuggestions(String key) {
+        key = key.trim();
         final Map<String, List<SearchKeywords>> collect = searchService
                 .getByPrefix(key).stream().collect(Collectors.groupingBy(SearchKeywords::getType));
         return ResponseEntity.ok(collect);
@@ -51,6 +52,7 @@ public class SearchResource {
 
     @GetMapping(value = "/ffprefix", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<List<SearchKeywords>> getFFPrefixSuggestions(String key) {
+        key = key.trim();
         final List<SearchKeywords> collect = searchService
                 .getByFFPrefix(key).stream().collect(Collectors.toList());
         return ResponseEntity.ok(collect);

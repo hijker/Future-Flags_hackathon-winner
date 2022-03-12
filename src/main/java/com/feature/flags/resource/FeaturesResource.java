@@ -29,6 +29,7 @@ public class FeaturesResource {
 
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createFeature(String id) {
+        id = id.trim();
         Features features = new Features(id);
         featuresService.insertFeature(features);
         searchService.insertSearchKeyword(new SearchKeywords(id, FEATURE.name()));

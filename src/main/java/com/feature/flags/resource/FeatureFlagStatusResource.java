@@ -65,6 +65,9 @@ public class FeatureFlagStatusResource {
         if (existing == null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
         }
+        name = name.trim();
+        levelValue = levelValue.trim();
+        updatedById = updatedById.trim();
         if (!force) {
             final String[] split = existing.getPreRequisiteFlags().split("::");
             for (String s : split) {
@@ -83,6 +86,8 @@ public class FeatureFlagStatusResource {
     public ResponseEntity<String> deleteFeatureFlagStatus(String name,
                                                           FeatureFlagLevel level,
                                                           String levelValue) {
+        name = name.trim();
+        levelValue = levelValue.trim();
         if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
@@ -127,15 +132,18 @@ public class FeatureFlagStatusResource {
             level = FeatureFlagLevel.SYSTEM;
             levelValue = "SYSTEM";
         }
+        levelValue = levelValue.trim();
         boolean filterOn = false;
         Set<String> allowedFLags = new HashSet<>();
         if (impactedModule != null) {
+            impactedModule = impactedModule.trim();
             filterOn = true;
             allowedFLags.addAll(impactedModuleService.getByModule(impactedModule)
                     .stream().map(ImpactedModules::getFeatureFlagName)
                     .collect(Collectors.toList()));
         }
         if (impactedFeature != null) {
+            impactedFeature = impactedFeature.trim();
             final Set<String> collect = impactedFeatureService.getByFeature(impactedFeature)
                     .stream().map(ImpactedFeatures::getFeatureFlagName)
                     .collect(Collectors.toSet());

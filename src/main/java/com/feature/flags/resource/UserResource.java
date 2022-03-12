@@ -14,9 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.List;
 
-import static com.feature.flags.model.SearchObjects.USER;
 import static com.feature.flags.model.SearchObjects.ORG;
 import static com.feature.flags.model.SearchObjects.ROLE;
+import static com.feature.flags.model.SearchObjects.USER;
 
 @RestController
 @RequestMapping("/user")
@@ -34,6 +34,11 @@ public class UserResource {
                                              String role,
                                              String org,
                                              String domain) {
+        id = id.trim();
+        email = email.trim();
+        role = role.trim();
+        org = org.trim();
+        domain = domain.trim();
         Users users = new Users(id, email, role, org, domain);
         userService.insertUser(users);
         searchService.insertSearchKeyword(new SearchKeywords(id, USER.name()));
