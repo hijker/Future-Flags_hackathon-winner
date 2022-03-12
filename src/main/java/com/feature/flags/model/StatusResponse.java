@@ -10,21 +10,21 @@ public class StatusResponse {
 
     private String summary;
 
-    private Date updated_At;
+    private Date updatedAt;
 
-    private String owner_module;
+    private String ownerModule;
 
     private FeatureFlagLevel level;
 
     public StatusResponse() {
     }
 
-    public StatusResponse(String name, Boolean value, String summary, Date updated_At, String owner_module, FeatureFlagLevel level) {
+    public StatusResponse(String name, Boolean value, String summary, Date updatedAt, String ownerModule, FeatureFlagLevel level) {
         this.name = name;
         this.value = value;
         this.summary = summary;
-        this.updated_At = updated_At;
-        this.owner_module = owner_module;
+        this.updatedAt = updatedAt;
+        this.ownerModule = ownerModule;
         this.level = level;
     }
 
@@ -41,11 +41,11 @@ public class StatusResponse {
     }
 
     public Date getUpdatedAt() {
-        return updated_At;
+        return updatedAt;
     }
 
     public String getOwnerModule() {
-        return owner_module;
+        return ownerModule;
     }
 
     public FeatureFlagLevel getLevel() {
