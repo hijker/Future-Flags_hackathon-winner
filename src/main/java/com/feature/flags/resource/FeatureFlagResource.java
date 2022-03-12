@@ -15,9 +15,11 @@ import com.feature.flags.service.ImpactedFeatureService;
 import com.feature.flags.service.ImpactedModuleService;
 import com.feature.flags.service.ModulesService;
 import com.feature.flags.service.SearchService;
+import org.elasticsearch.core.Nullable;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +28,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 import java.util.Set;
@@ -64,8 +67,8 @@ public class FeatureFlagResource {
                                                     String description,
                                                     String ownerModule,
                                                     String ownerFeature,
-                                                    @RequestParam List<String> impactedModules,
-                                                    @RequestParam List<String> impactedFeatures,
+                                                    @Nullable @RequestParam List<String> impactedModules,
+                                                    @Nullable @RequestParam List<String> impactedFeatures,
                                                     String maxGranularity,
                                                     String training,
                                                     String type,
@@ -73,7 +76,16 @@ public class FeatureFlagResource {
                                                     String deprecationFlow,
                                                     String reasonForIntroduction,
                                                     String createdById,
-                                                    @RequestParam List<String> preRequisiteFlags) {
+                                                    @Nullable @RequestParam List<String> preRequisiteFlags) {
+        if (impactedModules == null) {
+            impactedModules = new ArrayList<>();
+        }
+        if (impactedFeatures == null) {
+            impactedFeatures = new ArrayList<>();
+        }
+        if (preRequisiteFlags == null) {
+            preRequisiteFlags = new ArrayList<>();
+        }
         name = name.trim();
         summary = summary.trim();
         description = description.trim();
@@ -134,14 +146,15 @@ public class FeatureFlagResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
+    @Transactional
     @PutMapping(value = "/update", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> updateFeatureFlag(String name,
                                                     String summary,
                                                     String description,
                                                     String ownerModule,
                                                     String ownerFeature,
-                                                    @RequestParam List<String> impactedModules,
-                                                    @RequestParam List<String> impactedFeatures,
+                                                    @Nullable @RequestParam List<String> impactedModules,
+                                                    @Nullable @RequestParam List<String> impactedFeatures,
                                                     String maxGranularity,
                                                     String training,
                                                     String type,
@@ -149,7 +162,16 @@ public class FeatureFlagResource {
                                                     String deprecationFlow,
                                                     String reasonForIntroduction,
                                                     String createdById,
-                                                    @RequestParam List<String> preRequisiteFlags) {
+                                                    @Nullable @RequestParam List<String> preRequisiteFlags) {
+        if (impactedModules == null) {
+            impactedModules = new ArrayList<>();
+        }
+        if (impactedFeatures == null) {
+            impactedFeatures = new ArrayList<>();
+        }
+        if (preRequisiteFlags == null) {
+            preRequisiteFlags = new ArrayList<>();
+        }
         name = name.trim();
         summary = summary.trim();
         description = description.trim();
@@ -209,6 +231,7 @@ public class FeatureFlagResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
+    @Transactional
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFeatureFlag(String name) {
         name = name.trim();

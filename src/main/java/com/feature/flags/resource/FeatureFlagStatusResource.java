@@ -15,6 +15,7 @@ import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -61,11 +62,11 @@ public class FeatureFlagStatusResource {
         if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
+        name = name.trim();
         final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
         if (existing == null) {
             return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
         }
-        name = name.trim();
         levelValue = levelValue.trim();
         updatedById = updatedById.trim();
         if (!force) {
@@ -82,6 +83,7 @@ public class FeatureFlagStatusResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
+    @Transactional
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> deleteFeatureFlagStatus(String name,
                                                           FeatureFlagLevel level,
