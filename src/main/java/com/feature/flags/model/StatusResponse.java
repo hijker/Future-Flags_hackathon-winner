@@ -16,16 +16,29 @@ public class StatusResponse {
 
     private FeatureFlagLevel level;
 
+    private String impactedModules;
+
+    private String impactedFeatures;
+
     public StatusResponse() {
     }
 
-    public StatusResponse(String name, Boolean value, String summary, Date updatedAt, String ownerModule, FeatureFlagLevel level) {
+    public StatusResponse(String name,
+                          Boolean value,
+                          String summary,
+                          Date updatedAt,
+                          String ownerModule,
+                          FeatureFlagLevel level,
+                          String impactedModules,
+                          String impactedFeatures) {
         this.name = name;
         this.value = value;
         this.summary = summary;
         this.updatedAt = updatedAt;
         this.ownerModule = ownerModule;
         this.level = level;
+        this.impactedModules = impactedModules;
+        this.impactedFeatures = impactedFeatures;
     }
 
     public String getName() {
@@ -50,5 +63,13 @@ public class StatusResponse {
 
     public FeatureFlagLevel getLevel() {
         return level;
+    }
+
+    public String getImpactedFeatures() {
+        return impactedFeatures;
+    }
+
+    public String getImpactedModules() {
+        return impactedModules;
     }
 }

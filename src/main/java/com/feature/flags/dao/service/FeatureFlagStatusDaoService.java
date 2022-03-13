@@ -50,7 +50,9 @@ public class FeatureFlagStatusDaoService {
                 response.getSummary(),
                 response.getUpdated_At(),
                 response.getOwner_module(),
-                response.getLevel());
+                response.getLevel(),
+                response.getImpacted_modules(),
+                response.getImpacted_features());
     }
 
     public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {

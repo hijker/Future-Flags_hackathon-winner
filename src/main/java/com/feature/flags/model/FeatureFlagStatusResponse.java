@@ -10,4 +10,6 @@ public interface FeatureFlagStatusResponse {
     Date getUpdated_At();
     String getOwner_module();
     FeatureFlagLevel getLevel();
+    String getImpacted_modules();
+    String getImpacted_features();
 }
