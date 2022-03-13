@@ -20,6 +20,8 @@ public class StatusResponse {
 
     private String impactedFeatures;
 
+    private Boolean needsConfirmation;
+
     public StatusResponse() {
     }
 
@@ -30,7 +32,8 @@ public class StatusResponse {
                           String ownerModule,
                           FeatureFlagLevel level,
                           String impactedModules,
-                          String impactedFeatures) {
+                          String impactedFeatures,
+                          Boolean needsConfirmation) {
         this.name = name;
         this.value = value;
         this.summary = summary;
@@ -39,6 +42,7 @@ public class StatusResponse {
         this.level = level;
         this.impactedModules = impactedModules;
         this.impactedFeatures = impactedFeatures;
+        this.needsConfirmation = needsConfirmation;
     }
 
     public String getName() {
@@ -71,5 +75,9 @@ public class StatusResponse {
 
     public String getImpactedModules() {
         return impactedModules;
+    }
+
+    public Boolean getNeedsConfirmation() {
+        return needsConfirmation;
     }
 }

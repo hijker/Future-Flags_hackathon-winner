@@ -12,4 +12,5 @@ public interface FeatureFlagStatusResponse {
     FeatureFlagLevel getLevel();
     String getImpacted_modules();
     String getImpacted_features();
+    Boolean getNeeds_confirmation();
 }

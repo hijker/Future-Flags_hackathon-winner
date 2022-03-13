@@ -52,7 +52,8 @@ public class FeatureFlagStatusDaoService {
                 response.getOwner_module(),
                 response.getLevel(),
                 response.getImpacted_modules(),
-                response.getImpacted_features());
+                response.getImpacted_features(),
+                response.getNeeds_confirmation());
     }
 
     public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {
