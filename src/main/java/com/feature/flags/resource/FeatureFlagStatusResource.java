@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
@@ -129,13 +130,19 @@ public class FeatureFlagStatusResource {
 //    }
 
     @GetMapping(value = "/get_all_fallback", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<StatusResponse>>> getAllFallbackFeatureFlags(FeatureFlagLevel level,
+    public ResponseEntity<Map<String, List<StatusResponse>>> getAllFallbackFeatureFlags(String name,
+                                                                                        FeatureFlagLevel level,
                                                                                         String levelValue,
                                                                                         String impactedModule,
                                                                                         String impactedFeature) {
         if (level == null) {
             level = FeatureFlagLevel.SYSTEM;
             levelValue = "SYSTEM";
+        }
+        if (name != null) {
+            name = name.trim();
+            final StatusResponse featureFlagStatusByLevelAndLevelValueAndName = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
+            return ResponseEntity.ok().body(getGroupedResponse(Collections.singletonList(featureFlagStatusByLevelAndLevelValueAndName)));
         }
         levelValue = levelValue.trim();
         boolean filterOn = false;
