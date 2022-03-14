@@ -18,8 +18,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.feature.flags.model.SearchObjects.FFNAME;
-
 @RestController
 @RequestMapping("/search")
 public class SearchResource {
@@ -57,7 +55,9 @@ public class SearchResource {
         for (SearchObjects s : SearchObjects.values()) {
             final Page<SearchKeywords> byPrefixAndType = searchService.getByPrefixAndType(key, s.name());
             if (!byPrefixAndType.isEmpty()) {
-                collect.put(s.name(), byPrefixAndType.toList());
+                collect.put(s.name(), byPrefixAndType.stream()
+                        .map(sw -> new SearchKeywords(sw.getKey().replace("::", " "), sw.getType(), sw.getValue()))
+                        .collect(Collectors.toList()));
             }
         }
         return ResponseEntity.ok(collect);
