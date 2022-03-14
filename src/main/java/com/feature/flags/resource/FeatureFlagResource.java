@@ -146,7 +146,7 @@ public class FeatureFlagResource {
         for (String imf : impactedFeatures) {
             impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
         }
-        searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name(), name));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
@@ -241,7 +241,7 @@ public class FeatureFlagResource {
         name = name.trim();
         featureFlagStatusService.deleteAllStatus(name);
         featureFlagService.deleteFeatureFlag(name);
-        searchService.deleteKeyWord(new SearchKeywords(name, FFNAME.name()));
+        searchService.deleteKeyWord(new SearchKeywords(name, FFNAME.name(), name));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

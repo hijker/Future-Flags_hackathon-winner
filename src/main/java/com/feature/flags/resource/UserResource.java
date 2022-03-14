@@ -41,12 +41,12 @@ public class UserResource {
         domain = domain.trim();
         Users users = new Users(id, email, role, org, domain);
         userService.insertUser(users);
-        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, ROLE.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, ROLE.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name()));
-        searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name()));
+        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id));
+        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id));
+        searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name(), org));
+        searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name(), org));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

@@ -25,7 +25,7 @@ public class SearchResource {
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createEntry(String key,
                                               String type) {
-        SearchKeywords pojo = new SearchKeywords(key, type);
+        SearchKeywords pojo = new SearchKeywords(key, type, key);
         searchService.insertSearchKeyword(pojo);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
