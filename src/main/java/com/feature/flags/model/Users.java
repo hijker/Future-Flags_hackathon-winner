@@ -12,6 +12,7 @@ public class Users {
     String id;
     String email;
     String role;
+    String roleId;
     String org;
     String domain;
 
@@ -21,11 +22,15 @@ public class Users {
     public Users(String id,
                  String email,
                  String role,
+                 String roleId,
                  String org,
                  String domain) {
         this.id = id;
+        this.email = email;
         this.role = role;
+        this.roleId = roleId;
         this.org = org;
+        this.domain = domain;
     }
 
     public String getId() {
@@ -34,6 +39,10 @@ public class Users {
 
     public String getRole() {
         return role;
+    }
+
+    public String getRoleId() {
+        return roleId;
     }
 
     public String getOrg() {

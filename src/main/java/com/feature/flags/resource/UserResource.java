@@ -32,19 +32,23 @@ public class UserResource {
     public ResponseEntity<String> createUser(String id,
                                              String email,
                                              String role,
+                                             String roleId,
                                              String org,
                                              String domain) {
         id = id.trim();
         email = email.trim();
         role = role.trim();
+        roleId = roleId.trim();
         org = org.trim();
         domain = domain.trim();
-        Users users = new Users(id, email, role, org, domain);
+        Users users = new Users(id, email, role, roleId, org, domain);
         userService.insertUser(users);
         searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id));
         searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id));
         searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, ROLE.name(), role));
         searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(org + " " + roleId, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + roleId, ROLE.name(), role));
         searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name(), org));
         searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name(), org));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");

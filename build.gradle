@@ -32,8 +32,10 @@ dependencies {
 
 	//elastic search
 	implementation 'org.springframework.data:spring-data-elasticsearch'
+
+	testImplementation 'junit:junit:4.4'
 }
 
-//tasks.named('test') {
-//	useJUnitPlatform()
-//}
+tasks.named('test') {
+	useJUnitPlatform()
+}
