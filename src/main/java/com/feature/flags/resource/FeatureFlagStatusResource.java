@@ -13,6 +13,7 @@ import com.feature.flags.service.ImpactedFeatureService;
 import com.feature.flags.service.ImpactedModuleService;
 import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.transaction.annotation.Transactional;
@@ -73,14 +74,16 @@ public class FeatureFlagStatusResource {
         }
         levelValue = levelValue.trim();
         updatedById = updatedById.trim();
-        if (!force && existing.getPreRequisiteFlags() != null && !"".equals(existing.getPreRequisiteFlags())) {
+        if (value && !force && existing.getPreRequisiteFlags() != null && !"".equals(existing.getPreRequisiteFlags())) {
+            List<String> disabledFlags = new ArrayList<>();
             final String[] split = existing.getPreRequisiteFlags().split("::");
             for (String s : split) {
                 final ResponseEntity<Boolean> fallbackFeatureFlags = getFallbackFeatureFlags(s, level, levelValue);
                 if (Boolean.FALSE.equals(fallbackFeatureFlags.getBody())) {
-                    return ResponseEntity.badRequest().body("{ \"message\" : \"Prerequisite Feature flag " + s + " is not enabled\" }");
+                    disabledFlags.add(s);
                 }
             }
+            return ResponseEntity.status(HttpStatus.FAILED_DEPENDENCY).body(String.join("::", disabledFlags));
         }
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, levelValue, updatedById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
