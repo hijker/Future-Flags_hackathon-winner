@@ -147,14 +147,14 @@ public class FeatureFlagStatusResource {
         levelValue = levelValue.trim();
         boolean filterOn = false;
         Set<String> allowedFLags = new HashSet<>();
-        if (impactedModule != null) {
+        if (impactedModule != null && !"".equals(impactedModule)) {
             impactedModule = impactedModule.trim();
             filterOn = true;
             allowedFLags.addAll(impactedModuleService.getByModule(impactedModule)
                     .stream().map(ImpactedModules::getFeatureFlagName)
                     .collect(Collectors.toList()));
         }
-        if (impactedFeature != null) {
+        if (impactedFeature != null && !"".equals(impactedFeature)) {
             impactedFeature = impactedFeature.trim();
             final Set<String> collect = impactedFeatureService.getByFeature(impactedFeature)
                     .stream().map(ImpactedFeatures::getFeatureFlagName)
