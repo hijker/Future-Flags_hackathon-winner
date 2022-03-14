@@ -45,10 +45,9 @@ public class UserResource {
         userService.insertUser(users);
         searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id));
         searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id));
-        searchService.insertSearchKeyword(new SearchKeywords(org + " " + role, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + role, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(org + " " + roleId, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(domain + " " + roleId, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(org + role, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(domain + role, ROLE.name(), role));
+        searchService.insertSearchKeyword(new SearchKeywords(roleId, ROLE.name(), role));
         searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name(), org));
         searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name(), org));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");

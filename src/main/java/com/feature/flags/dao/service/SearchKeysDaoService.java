@@ -36,10 +36,14 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getFFByPrefix(String key) {
-        return repository.findByKeyStartingWithAndAndType(key, PageRequest.of(0, 10), FFNAME.name());
+        return repository.findByKeyStartingWithAndType(key, FFNAME.name(), PageRequest.of(0, 10));
     }
 
     public void deleteKeyWord(SearchKeywords searchKeywords) {
         repository.delete(searchKeywords);
+    }
+
+    public Page<SearchKeywords> getByPrefixAndType(String key, String name) {
+        return repository.findByKeyStartingWithAndType(key, name, PageRequest.of(0, 10));
     }
 }

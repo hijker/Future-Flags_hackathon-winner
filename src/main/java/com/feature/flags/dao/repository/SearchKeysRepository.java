@@ -11,7 +11,7 @@ public interface SearchKeysRepository extends ElasticsearchRepository<SearchKeyw
 
     Page<SearchKeywords> findByKeyStartingWith(String key, Pageable pageable);
 
-    Page<SearchKeywords> findByKeyStartingWithAndAndType(String key, Pageable pageable, String type);
+    Page<SearchKeywords> findByKeyStartingWithAndType(String key, String type, Pageable pageable);
 
-
+    Page<SearchKeywords> findByTypeAndKeyContains(String key, String type, Pageable pageable);
 }
