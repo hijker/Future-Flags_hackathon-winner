@@ -12,6 +12,7 @@ import com.feature.flags.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -50,14 +51,15 @@ public class BasicResource {
 
     @Autowired
     SearchService searchService;
-    
+
+    @Transactional
     @DeleteMapping(value = "/delete", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> delete() {
         redisService.deleteAllKey();
         featuresService.deleteAll();
         modulesService.deleteAll();
-        featureFlagService.deleteAll();
         featureFlagStatusService.deleteAll();
+        featureFlagService.deleteAll();
         userService.deleteAll();
         impactedFeatureService.deleteAll();
         impactedModuleService.deleteAll();
