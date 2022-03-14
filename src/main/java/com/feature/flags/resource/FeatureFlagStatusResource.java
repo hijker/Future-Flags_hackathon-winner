@@ -139,7 +139,7 @@ public class FeatureFlagStatusResource {
             level = FeatureFlagLevel.SYSTEM;
             levelValue = "SYSTEM";
         }
-        if (name != null) {
+        if (name != null && !"".equals(name)) {
             name = name.trim();
             final StatusResponse featureFlagStatusByLevelAndLevelValueAndName = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
             return ResponseEntity.ok().body(getGroupedResponse(Collections.singletonList(featureFlagStatusByLevelAndLevelValueAndName)));
