@@ -24,4 +24,8 @@ public class ImpactedFeatureService {
     public void deleteImpactedFeatureByName(String name) {
         impactedFeatureDaoService.deleteByFeatureFlagName(name);
     }
+
+    public void deleteAll() {
+        impactedFeatureDaoService.deleteAll();
+    }
 }

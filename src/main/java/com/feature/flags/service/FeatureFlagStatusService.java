@@ -57,4 +57,8 @@ public class FeatureFlagStatusService {
         redisService.deleteAllKey();
         featureFlagStatusDaoService.deleteAllStatus(name);
     }
+
+    public void deleteAll() {
+        featureFlagStatusDaoService.deleteAll();
+    }
 }

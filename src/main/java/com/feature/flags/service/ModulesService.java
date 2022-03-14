@@ -21,4 +21,7 @@ public class ModulesService {
         return modulesDaoService.getByAll();
     }
 
+    public void deleteAll() {
+        modulesDaoService.deleteAll();
+    }
 }

@@ -46,4 +46,8 @@ public class SearchKeysDaoService {
     public Page<SearchKeywords> getByPrefixAndType(String key, String name) {
         return repository.findByKeyStartingWithAndType(key, name, PageRequest.of(0, 10));
     }
+
+    public void deleteAll() {
+        repository.deleteAll();
+    }
 }

@@ -28,4 +28,7 @@ public class ModulesDaoService {
         return list;
     }
 
+    public void deleteAll() {
+        modulesRepository.deleteAll();
+    }
 }

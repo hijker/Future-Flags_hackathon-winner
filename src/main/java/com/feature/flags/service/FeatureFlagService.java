@@ -28,4 +28,8 @@ public class FeatureFlagService {
     public void deleteFeatureFlag(String name) {
         featureFlagDaoService.deleteFeatureFlag(name);
     }
+
+    public void deleteAll() {
+        featureFlagDaoService.deleteAll();
+    }
 }

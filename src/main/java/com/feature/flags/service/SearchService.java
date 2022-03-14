@@ -41,4 +41,8 @@ public class SearchService {
     public Page<SearchKeywords> getByPrefixAndType(String key, String name) {
         return daoService.getByPrefixAndType(key, name);
     }
+
+    public void deleteAll() {
+        daoService.deleteAll();
+    }
 }

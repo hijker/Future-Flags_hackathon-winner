@@ -63,4 +63,8 @@ public class FeatureFlagStatusDaoService {
     public void deleteAllStatus(String name) {
         featureFlagStatusRepository.deleteAllByFlag_Name(name);
     }
+
+    public void deleteAll() {
+        featureFlagStatusRepository.deleteAll();
+    }
 }

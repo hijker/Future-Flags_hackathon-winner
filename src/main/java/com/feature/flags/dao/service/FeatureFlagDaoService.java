@@ -32,4 +32,8 @@ public class FeatureFlagDaoService {
     public void deleteFeatureFlag(String name) {
         featureFlagRepository.deleteByName(name);
     }
+
+    public void deleteAll() {
+        featureFlagRepository.deleteAll();
+    }
 }

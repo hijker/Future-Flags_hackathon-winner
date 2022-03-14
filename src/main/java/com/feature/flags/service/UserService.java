@@ -32,4 +32,8 @@ public class UserService {
     public Users getByOrg(String org) {
         return userDaoService.getByOrg(org);
     }
+
+    public void deleteAll() {
+        userDaoService.deleteAll();
+    }
 }

@@ -28,4 +28,8 @@ public class ImpactedFeatureDaoService {
     public void deleteByFeatureFlagName(String name) {
         impactedFeaturesRepository.deleteByFeatureFlagName(name);
     }
+
+    public void deleteAll() {
+        impactedFeaturesRepository.deleteAll();
+    }
 }

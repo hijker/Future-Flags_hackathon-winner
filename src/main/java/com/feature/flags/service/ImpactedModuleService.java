@@ -24,4 +24,8 @@ public class ImpactedModuleService {
     public void deleteImpactedModuleByName(String name) {
         impactedModuleDaoService.deleteByName(name);
     }
+
+    public void deleteAll() {
+        impactedModuleDaoService.deleteAll();
+    }
 }

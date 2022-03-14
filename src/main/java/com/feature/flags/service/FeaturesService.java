@@ -21,4 +21,7 @@ public class FeaturesService {
         return featuresDaoService.getByAll();
     }
 
+    public void deleteAll() {
+        featuresDaoService.deleteAll();
+    }
 }

@@ -28,4 +28,7 @@ public class FeaturesDaoService {
         return list;
     }
 
+    public void deleteAll() {
+        featuresRepository.deleteAll();
+    }
 }

@@ -36,4 +36,7 @@ public class UserDaoService {
         return userRepository.findByOrg(org).orElse(null);
     }
 
+    public void deleteAll() {
+        userRepository.deleteAll();
+    }
 }
