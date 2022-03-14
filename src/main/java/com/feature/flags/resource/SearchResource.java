@@ -50,7 +50,7 @@ public class SearchResource {
         if (key == null || "".equals(key) || " ".equals(key)) {
             return ResponseEntity.ok().build();
         }
-        key = key.replace(" ", "");
+        key = key.replace(" ", "::");
         final Map<String, List<SearchKeywords>> collect = new HashMap<>();
         for (SearchObjects s : SearchObjects.values()) {
             final Page<SearchKeywords> byPrefixAndType = searchService.getByPrefixAndType(key, s.name());
