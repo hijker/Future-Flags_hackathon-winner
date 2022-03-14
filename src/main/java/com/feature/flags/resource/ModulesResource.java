@@ -32,7 +32,7 @@ public class ModulesResource {
         id = id.trim();
         Modules module = new Modules(id);
         modulesService.insertTag(module);
-        searchService.insertSearchKeyword(new SearchKeywords(id, MODULE.name(), id));
+        searchService.insertSearchKeyword(new SearchKeywords(id, MODULE.name(), id, id));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

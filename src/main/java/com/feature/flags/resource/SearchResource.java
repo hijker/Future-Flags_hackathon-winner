@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,7 +29,7 @@ public class SearchResource {
     @PostMapping(value = "/add", produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<String> createEntry(String key,
                                               String type) {
-        SearchKeywords pojo = new SearchKeywords(key, type, key);
+        SearchKeywords pojo = new SearchKeywords(key, type, key, key);
         searchService.insertSearchKeyword(pojo);
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
@@ -56,7 +57,7 @@ public class SearchResource {
             final Page<SearchKeywords> byPrefixAndType = searchService.getByPrefixAndType(key, s.name());
             if (!byPrefixAndType.isEmpty()) {
                 collect.put(s.name(), byPrefixAndType.stream()
-                        .map(sw -> new SearchKeywords(sw.getKey().replace("::", " "), sw.getType(), sw.getValue()))
+                        .map(sw -> new SearchKeywords(sw.getKey().replace("::", " "), sw.getType(), sw.getValue(), sw.getDisplay()))
                         .collect(Collectors.toList()));
             }
         }
@@ -73,5 +74,4 @@ public class SearchResource {
                 .getByFFPrefix(key).stream().collect(Collectors.toList());
         return ResponseEntity.ok(collect);
     }
-
 }

@@ -11,6 +11,8 @@ public class SearchKeywords {
 
     String key;
 
+    String display;
+
     String value;
 
     String type;
@@ -18,11 +20,15 @@ public class SearchKeywords {
     public SearchKeywords() {
     }
 
-    public SearchKeywords(String key, String type, String value) {
+    public SearchKeywords(String key,
+                          String type,
+                          String value,
+                          String display) {
         this.id = key + "::" + type;
         this.key = key;
         this.type = type;
         this.value = value;
+        this.display = display;
     }
 
     public String getId() {
@@ -31,6 +37,10 @@ public class SearchKeywords {
 
     public String getKey() {
         return key;
+    }
+
+    public String getDisplay() {
+        return display;
     }
 
     public String getType() {

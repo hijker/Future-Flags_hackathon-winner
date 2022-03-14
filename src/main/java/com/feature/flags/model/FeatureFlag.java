@@ -13,7 +13,7 @@ public class FeatureFlag {
     @Id
     private String name;                    //Name of the flag
     private String summary;                 //Summary- 1 liner
-    @Column(length=2147483647)
+    @Column(length=10485760)
     private String description;             //Description
     private String ownerModule;             //Owner modules-
     private String ownerFeature;

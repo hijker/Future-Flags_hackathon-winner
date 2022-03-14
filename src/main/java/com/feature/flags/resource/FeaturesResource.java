@@ -32,7 +32,7 @@ public class FeaturesResource {
         id = id.trim();
         Features features = new Features(id);
         featuresService.insertFeature(features);
-        searchService.insertSearchKeyword(new SearchKeywords(id, FEATURE.name(), id));
+        searchService.insertSearchKeyword(new SearchKeywords(id, FEATURE.name(), id, id));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

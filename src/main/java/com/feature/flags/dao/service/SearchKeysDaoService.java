@@ -7,7 +7,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
-import static com.feature.flags.model.SearchObjects.FFNAME;
+import static com.feature.flags.model.SearchObjects.FLAG;
 
 @Service
 public class SearchKeysDaoService {
@@ -36,7 +36,7 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getFFByPrefix(String key) {
-        return repository.findByKeyStartingWithAndType(key, FFNAME.name(), PageRequest.of(0, 10));
+        return repository.findByKeyStartingWithAndType(key, FLAG.name(), PageRequest.of(0, 10));
     }
 
     public void deleteKeyWord(SearchKeywords searchKeywords) {

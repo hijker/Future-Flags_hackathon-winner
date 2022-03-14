@@ -4,7 +4,7 @@ public enum SearchObjects {
     USER,
     ORG,
     ROLE,
-    FFNAME,
+    FLAG,
     MODULE,
     FEATURE
 }

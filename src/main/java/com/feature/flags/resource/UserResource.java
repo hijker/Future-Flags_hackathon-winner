@@ -43,13 +43,16 @@ public class UserResource {
         domain = domain.trim();
         Users users = new Users(id, email, role, roleId, org, domain);
         userService.insertUser(users);
-        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id));
-        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id));
-        searchService.insertSearchKeyword(new SearchKeywords(org + "::" + role, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(domain + "::" + role, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(roleId, ROLE.name(), role));
-        searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name(), org));
-        searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name(), org));
+        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id, "User Id : " + id + ", E-Mail Id : " + email));
+        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id, "User Id : " + id + ", E-Mail Id : " + email));
+        searchService.insertSearchKeyword(new SearchKeywords(org + "::" + role, ROLE.name(), role,
+                "Role Id : " + id + ", Domain : " + domain + ", Role name : " + role));
+        searchService.insertSearchKeyword(new SearchKeywords(domain + "::" + role, ROLE.name(), role,
+                "Role Id : " + id + ", Domain : " + domain + ", Role name : " + role));
+        searchService.insertSearchKeyword(new SearchKeywords(roleId, ROLE.name(), role,
+                "Role Id : " + id + ", Domain : " + domain + ", Role name : " + role));
+        searchService.insertSearchKeyword(new SearchKeywords(org, ORG.name(), org, "Org Id : " + org + ", Domain : " + domain));
+        searchService.insertSearchKeyword(new SearchKeywords(domain, ORG.name(), org, "Org Id : " + org + ", Domain : " + domain));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

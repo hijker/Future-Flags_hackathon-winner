@@ -35,7 +35,7 @@ import java.util.List;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-import static com.feature.flags.model.SearchObjects.FFNAME;
+import static com.feature.flags.model.SearchObjects.FLAG;
 
 @RestController
 @RequestMapping("/ff")
@@ -146,7 +146,7 @@ public class FeatureFlagResource {
         for (String imf : impactedFeatures) {
             impactedFeatureService.insertImpactedFeature(new ImpactedFeatures(name, imf));
         }
-        searchService.insertSearchKeyword(new SearchKeywords(name, FFNAME.name(), name));
+        searchService.insertSearchKeyword(new SearchKeywords(name, FLAG.name(), name, name));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
@@ -241,7 +241,7 @@ public class FeatureFlagResource {
         name = name.trim();
         featureFlagStatusService.deleteAllStatus(name);
         featureFlagService.deleteFeatureFlag(name);
-        searchService.deleteKeyWord(new SearchKeywords(name, FFNAME.name(), name));
+        searchService.deleteKeyWord(new SearchKeywords(name, FLAG.name(), name, name));
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 

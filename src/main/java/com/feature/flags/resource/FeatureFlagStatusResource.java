@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.ArrayList;
@@ -87,6 +88,29 @@ public class FeatureFlagStatusResource {
         }
         FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, levelValue, updatedById, new Date());
         featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
+        return ResponseEntity.ok("{ \"message\" : \"Success\" }");
+    }
+
+    @PutMapping(value = "/update_all", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateFeatureFlagStatus(String name,
+                                                          Boolean value,
+                                                          FeatureFlagLevel level,
+                                                          @RequestParam List<String> levelValue,
+                                                          String updatedById) {
+        if (level == null) {
+            return ResponseEntity.badRequest().body("No level provided");
+        }
+        name = name.trim();
+        final FeatureFlag existing = featureFlagService.getFeatureFlag(name);
+        if (existing == null) {
+            return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
+        }
+        updatedById = updatedById.trim();
+        for (String lv : levelValue) {
+            lv = lv.trim();
+            FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, lv, updatedById, new Date());
+            featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
+        }
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
