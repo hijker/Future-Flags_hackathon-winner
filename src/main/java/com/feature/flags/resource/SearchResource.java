@@ -7,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -17,6 +16,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
 import java.util.stream.Collectors;
 
 @RestController
@@ -47,18 +50,26 @@ public class SearchResource {
     }
 
     @GetMapping(value = "/prefix", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Map<String, List<SearchKeywords>>> getPrefixSuggestions(String key) {
+    public ResponseEntity<Map<String, List<SearchKeywords>>> getPrefixSuggestions(String key) throws ExecutionException, InterruptedException {
+        ExecutorService executor
+                = Executors.newFixedThreadPool(SearchObjects.values().length);
         if (key == null || "".equals(key) || " ".equals(key)) {
             return ResponseEntity.ok().build();
         }
         key = key.replace(" ", "::");
         final Map<String, List<SearchKeywords>> collect = new HashMap<>();
+
+        List<Future<Page<SearchKeywords>>> futures = new ArrayList<>();
         for (SearchObjects s : SearchObjects.values()) {
-            final Page<SearchKeywords> byPrefixAndType = searchService.getByPrefixAndType(key, s.name());
+            String finalKey = key;
+            futures.add(executor.submit(() -> searchService.getByPrefixAndType(finalKey, s.name())));
+        }
+
+        for (Future<Page<SearchKeywords>> f : futures) {
+            final Page<SearchKeywords> byPrefixAndType = f.get();
             if (!byPrefixAndType.isEmpty()) {
-                collect.put(s.name(), byPrefixAndType.stream()
-                        .map(sw -> new SearchKeywords(sw.getKey().replace("::", " "), sw.getType(), sw.getValue(), sw.getDisplay()))
-                        .collect(Collectors.toList()));
+                final List<SearchKeywords> content = byPrefixAndType.getContent();
+                collect.put(content.get(0).getType(), content);
             }
         }
         return ResponseEntity.ok(collect);
