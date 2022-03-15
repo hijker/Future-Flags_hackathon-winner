@@ -34,17 +34,23 @@ public class UserResource {
                                              String role,
                                              String roleId,
                                              String org,
-                                             String domain) {
+                                             String domain,
+                                             String name) {
         id = id.trim();
         email = email.trim();
         role = role.trim();
         roleId = roleId.trim();
         org = org.trim();
         domain = domain.trim();
-        Users users = new Users(id, email, role, roleId, org, domain);
+        name = name.trim();
+        Users users = new Users(id, email, role, roleId, org, domain, name);
         userService.insertUser(users);
-        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id, "User Id : " + id + ", E-Mail Id : " + email));
-        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id, "User Id : " + id + ", E-Mail Id : " + email));
+        searchService.insertSearchKeyword(new SearchKeywords(id, USER.name(), id,
+                "User Id : " + id + ", E-Mail Id : " + email + ", Name : " + name));
+        searchService.insertSearchKeyword(new SearchKeywords(email, USER.name(), id,
+                "User Id : " + id + ", E-Mail Id : " + email + ", Name : " + name));
+        searchService.insertSearchKeyword(new SearchKeywords(name.replace(" ", "::"), USER.name(), id,
+                "User Id : " + id + ", E-Mail Id : " + email + ", Name : " + name));
         searchService.insertSearchKeyword(new SearchKeywords(org + "::" + role, ROLE.name(), role,
                 "Role Id : " + id + ", Domain : " + domain + ", Role name : " + role));
         searchService.insertSearchKeyword(new SearchKeywords(domain + "::" + role, ROLE.name(), role,

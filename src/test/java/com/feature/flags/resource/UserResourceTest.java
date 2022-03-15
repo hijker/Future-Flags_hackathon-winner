@@ -20,7 +20,8 @@ class UserResourceTest {
         for (int i = 1; i < 30; i++) {
             //id, email, role, roleId, org, domain
             userResource.createUser(i + "", ((char) (('a' + i % 26))) + "dsds@" + ((char) (('a' + ((i / 10) % 26)))) + "dom.com",
-                    roles.get(i % 8), i + "r", i / 10 + "", ((char) (('a' + ((i / 10) % 26)))) + "dom.com");
+                    roles.get(i % 8), i + "r", i / 10 + "", ((char) (('a' + ((i / 10) % 26)))) + "dom.com",
+                    ((char) (('a' + i % 26))) + "dsds");
         }
 
     }

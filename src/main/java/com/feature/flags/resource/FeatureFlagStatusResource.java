@@ -91,12 +91,12 @@ public class FeatureFlagStatusResource {
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");
     }
 
-    @PutMapping(value = "/update_all", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<String> updateFeatureFlagStatus(String name,
-                                                          Boolean value,
-                                                          FeatureFlagLevel level,
-                                                          @RequestParam List<String> levelValue,
-                                                          String updatedById) {
+    @PutMapping(value = "/update_all_name", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateFeatureFlagStatusByName(String name,
+                                                                Boolean value,
+                                                                FeatureFlagLevel level,
+                                                                @RequestParam List<String> levelValue,
+                                                                String updatedById) {
         if (level == null) {
             return ResponseEntity.badRequest().body("No level provided");
         }
@@ -109,6 +109,28 @@ public class FeatureFlagStatusResource {
         for (String lv : levelValue) {
             lv = lv.trim();
             FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, lv, updatedById, new Date());
+            featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
+        }
+        return ResponseEntity.ok("{ \"message\" : \"Success\" }");
+    }
+
+    @PutMapping(value = "/update_all_value", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<String> updateFeatureFlagStatusByLevelValue(@RequestParam List<String> name,
+                                                                      Boolean value,
+                                                                      FeatureFlagLevel level,
+                                                                      String levelValue,
+                                                                      String updatedById) {
+        if (level == null) {
+            return ResponseEntity.badRequest().body("No level provided");
+        }
+        levelValue = levelValue.trim();
+        updatedById = updatedById.trim();
+        for (String n : name) {
+            final FeatureFlag existing = featureFlagService.getFeatureFlag(n);
+            if (existing == null) {
+                return ResponseEntity.badRequest().body("{ \"message\" : \"Feature flag name does not exist\" }");
+            }
+            FeatureFlagStatus featureFlagStatus = new FeatureFlagStatus(existing, value, level, levelValue, updatedById, new Date());
             featureFlagStatusService.insertFeatureFlagStatus(featureFlagStatus);
         }
         return ResponseEntity.ok("{ \"message\" : \"Success\" }");

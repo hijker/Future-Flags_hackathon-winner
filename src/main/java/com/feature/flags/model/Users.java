@@ -15,6 +15,7 @@ public class Users {
     String roleId;
     String org;
     String domain;
+    String name;
 
     public Users() {
     }
@@ -24,13 +25,15 @@ public class Users {
                  String role,
                  String roleId,
                  String org,
-                 String domain) {
+                 String domain,
+                 String name) {
         this.id = id;
         this.email = email;
         this.role = role;
         this.roleId = roleId;
         this.org = org;
         this.domain = domain;
+        this.name = name;
     }
 
     public String getId() {
@@ -55,5 +58,9 @@ public class Users {
 
     public String getDomain() {
         return domain;
+    }
+
+    public String getName() {
+        return name;
     }
 }
