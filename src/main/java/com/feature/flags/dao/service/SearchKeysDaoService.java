@@ -28,7 +28,7 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getByPrefix(String key) {
-        return repository.findByKeyStartingWith(key, PageRequest.of(0, 10));
+        return repository.findByKeyStartingWith(key, PageRequest.of(0, 5));
     }
 
     public Iterable<SearchKeywords> getAll() {
@@ -36,7 +36,7 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getFFByPrefix(String key) {
-        return repository.findByKeyStartingWithAndType(key, FLAG.name(), PageRequest.of(0, 10));
+        return repository.findByKeyStartingWithAndType(key, FLAG.name(), PageRequest.of(0, 5));
     }
 
     public void deleteKeyWord(SearchKeywords searchKeywords) {
@@ -44,7 +44,7 @@ public class SearchKeysDaoService {
     }
 
     public Page<SearchKeywords> getByPrefixAndType(String key, String name) {
-        return repository.findByKeyStartingWithAndType(key, name, PageRequest.of(0, 10));
+        return repository.findByKeyStartingWithAndType(key, name, PageRequest.of(0, 5));
     }
 
     public void deleteAll() {
