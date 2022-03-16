@@ -1,5 +1,6 @@
 package com.feature.flags.resource;
 
+import com.feature.flags.model.FeatureFlagLevel;
 import com.feature.flags.model.SearchKeywords;
 import com.feature.flags.model.SearchObjects;
 import com.feature.flags.service.SearchService;
@@ -73,6 +74,19 @@ public class SearchResource {
             }
         }
         return ResponseEntity.ok(collect);
+    }
+
+    @GetMapping(value = "/specific_prefix", produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<SearchKeywords>> getPrefixSuggestions(String key,
+                                                                     FeatureFlagLevel level) {
+        if (key == null || "".equals(key) || " ".equals(key)) {
+            return ResponseEntity.ok().build();
+        }
+        if (level == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        key = key.replace(" ", "::");
+        return ResponseEntity.ok(searchService.getByPrefixAndType(key, level.name()).toList());
     }
 
     @GetMapping(value = "/ffprefix", produces = MediaType.APPLICATION_JSON_VALUE)
