@@ -22,7 +22,10 @@ public class StatusResponse {
 
     private Boolean needsConfirmation;
 
-    private final String updatedBy;
+    private String updatedBy;
+
+    public StatusResponse() {
+    }
 
     public StatusResponse(String name,
                           Boolean value,
