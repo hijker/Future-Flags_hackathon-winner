@@ -41,7 +41,11 @@ public class FeatureFlagStatusDaoService {
     }
 
     public StatusResponse getFeatureFlagStatusByLevelAndLevelValueAndName(String name, FeatureFlagLevel level, String levelValue) {
-        return getSRP(this.featureFlagStatusRepository.getFeatureFlagStatusByNameAndLevelAndLevelValue(name, level.name(), levelValue));
+        FeatureFlagStatusResponse featureFlagStatusByNameAndLevelAndLevelValue = this.featureFlagStatusRepository.getFeatureFlagStatusByNameAndLevelAndLevelValue(name, level.name(), levelValue);
+        if (featureFlagStatusByNameAndLevelAndLevelValue == null) {
+            return null;
+        }
+        return getSRP(featureFlagStatusByNameAndLevelAndLevelValue);
     }
 
     StatusResponse getSRP(FeatureFlagStatusResponse response) {
