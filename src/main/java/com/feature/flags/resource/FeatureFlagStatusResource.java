@@ -235,6 +235,7 @@ public class FeatureFlagStatusResource {
                 }
             }
         }
+        response.forEach((key, value) -> value.sort(Comparator.comparing(StatusResponse::getName)));
         return ResponseEntity.ok().body(response);
     }
 
@@ -311,7 +312,9 @@ public class FeatureFlagStatusResource {
     }
 
     Map<String, List<StatusResponse>> getGroupedResponse(List<StatusResponse> response) {
-        return response.stream()
+        final Map<String, List<StatusResponse>> collect = response.stream()
                 .collect(Collectors.groupingBy(StatusResponse::getOwnerModule));
+        collect.forEach((key, value) -> value.sort(Comparator.comparing(StatusResponse::getName)));
+        return collect;
     }
 }
