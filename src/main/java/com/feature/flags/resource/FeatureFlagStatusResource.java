@@ -190,8 +190,18 @@ public class FeatureFlagStatusResource {
         }
         if (name != null && !"".equals(name)) {
             name = name.trim();
-            final StatusResponse featureFlagStatusByLevelAndLevelValueAndName = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, level, levelValue);
-            return ResponseEntity.ok().body(getGroupedResponse(Collections.singletonList(featureFlagStatusByLevelAndLevelValueAndName)));
+            final FeatureFlagLevel[] values = FeatureFlagLevel.values();
+            Arrays.sort(values, Comparator.comparingInt(Enum::ordinal));
+
+            for (FeatureFlagLevel l : values) {
+                if (l.ordinal() >= level.ordinal()) {
+                    final StatusResponse featureFlagStatusByLevelAndLevelValueAndName = featureFlagStatusService.getFeatureFlagStatusByLevelAndLevelValueAndName(name, l, getLevelValueForLevelFromLevel(level, levelValue, l));
+                    if (featureFlagStatusByLevelAndLevelValueAndName == null) {
+                        continue;
+                    }
+                    return ResponseEntity.ok().body(getGroupedResponse(Collections.singletonList(featureFlagStatusByLevelAndLevelValueAndName)));
+                }
+            }
         }
         levelValue = levelValue.trim();
         boolean filterOn = false;
