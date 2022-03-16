@@ -22,8 +22,7 @@ public class StatusResponse {
 
     private Boolean needsConfirmation;
 
-    public StatusResponse() {
-    }
+    private final String updatedBy;
 
     public StatusResponse(String name,
                           Boolean value,
@@ -33,7 +32,8 @@ public class StatusResponse {
                           FeatureFlagLevel level,
                           String impactedModules,
                           String impactedFeatures,
-                          Boolean needsConfirmation) {
+                          Boolean needsConfirmation,
+                          String updatedBy) {
         this.name = name;
         this.value = value;
         this.summary = summary;
@@ -43,6 +43,7 @@ public class StatusResponse {
         this.impactedModules = impactedModules;
         this.impactedFeatures = impactedFeatures;
         this.needsConfirmation = needsConfirmation;
+        this.updatedBy = updatedBy;
     }
 
     public String getName() {
@@ -79,5 +80,9 @@ public class StatusResponse {
 
     public Boolean getNeedsConfirmation() {
         return needsConfirmation;
+    }
+
+    public String getUpdatedBy() {
+        return updatedBy;
     }
 }
