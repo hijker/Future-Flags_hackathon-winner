@@ -30,10 +30,11 @@ public class UserDaoService {
     }
 
     public Users getByRole(String role) {
-        return userRepository.findByRole(role).orElse(null);
+        return userRepository.findByRole(role).get(0);
     }
+
     public Users getByOrg(String org) {
-        return userRepository.findByOrg(org).orElse(null);
+        return userRepository.findByOrg(org).get(0);
     }
 
     public void deleteAll() {
