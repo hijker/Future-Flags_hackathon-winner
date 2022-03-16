@@ -50,6 +50,7 @@ public class FeatureFlagStatusService {
 
     public void deleteStatus(String name, FeatureFlagLevel level, String levelValue) {
         redisService.deleteKey(name + ":" + level + ":" + levelValue);
+        redisService.deleteKey(level + ":" + levelValue);
         this.featureFlagStatusDaoService.deleteStatus(name, level, levelValue);
     }
 
