@@ -9,5 +9,5 @@ Change the implementation of getLevelValueForLevelFromLevel method in FeatureFla
 Change levels in the FeatureFlagLevel enum.
 
 To start the server 
-    1. Install docker and docker-compose
-    2. run init script as ./init.sh
+ 1. Install docker and docker-compose
+ 2. run init script as ./init.sh
